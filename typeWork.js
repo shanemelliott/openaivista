@@ -1,0 +1,44 @@
+const {vistaClient} = require('./vistaClient');
+const { openaiClient,initializeClient } = require('./openaiClient.js');
+const { processPatientData } = require('./processPatientData');
+const dotenv = require('dotenv');
+const path = require('path');
+
+dotenv.config({ path: path.resolve(__dirname, '.env') });
+
+
+
+// Main function to test the vistaClient
+async function main() {
+  try {
+  
+    // Define parameters for the RPC call
+    const context = 'LHS RPC CONTEXT';
+    const stationNo = '500';
+    const duz = process.env.DUZ;
+    const rpc = 'VPR GET PATIENT DATA JSON';
+    const params = [{
+      "namedArray": {
+        "patientId": "237"
+            }
+        }
+    ]
+
+    // Call the vistaClient function
+    const response = await vistaClient(stationNo, duz, context,rpc, params);
+   const patientData = processPatientData(JSON.parse(response).data.items);
+
+  console.log('Patient Data:', patientData.consult.length, 'consults found');
+  console.log('Patient Data:', patientData.problem.length, 'problems found');
+  console.log('Patient Data:', patientData.allergy.length, 'allergies found');
+  console.log('Patient Data:', patientData.visit.length, 'visits found');
+  console.log('Patient Data:', patientData.document.length, 'documents found');
+  console.log('Patient Data:', patientData.lab.length, 'labs found');
+
+
+   } catch (error) {
+    console.error('Error occurred:', error.message);
+  }
+}
+
+main();
