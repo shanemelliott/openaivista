@@ -1,5 +1,7 @@
-# openaivista
+# VA OpenAI Demo
 
-This is a quick demo project that shows how to call VistA RPCs (Remote Procedure Calls), process the results, and then analyze the data using OpenAI.
+This repository contains a demo for using OpenAI's API to analyze VistA EMR data. It also uses [vista-api-x](https://github.com/department-of-veterans-affairs/octo-vista-api-x) to fetch data from a VistA using the [VPR GET PATIENT DATA JSON] (https://vivian.worldvista.org/vivian-data/8994/8994-3243.html).
 
-After running the demo, you can view the analysis results in the [output.txt](./output.txt) file.
+The goal of this demo is to demonstrate how to use OpenAI's API to analyze patient data and generate summaries.
+
+You can view an example of analysis results in the [output.txt](./output.txt) file.
