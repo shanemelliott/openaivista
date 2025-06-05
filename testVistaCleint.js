@@ -1,4 +1,8 @@
 const {vistaClient} = require('./vistaClient');
+const dotenv = require('dotenv');
+const path = require('path');
+
+dotenv.config({ path: path.resolve(__dirname, '.env') });
 
 // Main function to test the vistaClient
 async function main() {
@@ -6,7 +10,7 @@ async function main() {
     // Define parameters for the RPC call
     const context = 'OR CPRS GUI CHART';
     const stationNo = '500';
-    const duz = '520824652';
+    const duz = process.env.DUZ;
     const rpc = 'ORWU DT';
     const params = [
       {"string": "NOW"}
