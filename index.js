@@ -25,8 +25,8 @@ async function main() {
     ]
 
     // Call the vistaClient function
-  
-
+   const response = await vistaClient(stationNo, duz, context,rpc, params);
+   const patientData = processPatientData(JSON.parse(response).data.items);
   //console.log('Patient Data:', patientData);
   console.log('Patient Data:', patientData.consult.length, 'consults found');
   console.log('Patient Data:', patientData.problem.length, 'problems found');

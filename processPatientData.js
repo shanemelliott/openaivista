@@ -81,7 +81,7 @@ function processPatientData(items) {
               });
               break;
             case 'med':
-              console.log('med', item);
+              
               patientData.med.push({
                 type,
                 type: item.TypeName,
