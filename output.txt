@@ -1,81 +1,104 @@
-
-Typs to process:
-
-const types = [
-  'patient', 'problem', 'allergy', 'consult', 'vital', 'lab', 'order', 'treatment',
-  'med', 'ptf', 'factor', 'immunization', 'cpt', 'education', 'pov', 'image',
-  'appointment', 'surgery', 'document', 'visit'
-];
-
-
-C:\Users\VACOEllioS1\apps\openai-node-orig>node .
-Processed Types:
-
-Patient Data: 31 consults found
+Calling VISTA RPC...
+VISTA RPC Call: 5.887s
+Patient Data: 1 patients found
 Patient Data: 6 problems found
-Patient Data: 3 allergies found
-Patient Data: 192 visits found
+Patient Data: 3 allergys found
+Patient Data: 31 consults found
+Patient Data: 554 vitals found
+Patient Data: 379 labs found
+Patient Data: 394 orders found
+Patient Data: 63 meds found
+Patient Data: 44 factors found
+Patient Data: 2 immunizations found
+Patient Data: 488 appointments found
+Patient Data: 2 surgerys found
 Patient Data: 88 documents found
+Patient Data: 192 visits found
+Calling OpenAI client...
+Please use the following template to create a primary care note according the following instructions:
+(1) Use same font size with no bolding or italics. (2) Use two line breaks between different sections. (3) When talking about the patient, use “Veteran” instead of “patient”. (4) Avoid the words: “denies”, “reports”, “cooperative”. (5) Do not include any information that was not explicitly discussed in the transcript. (6) do not change the format, existing data or spacing of the template unless specifically indicated below. (7) do not delete any information that is already populated in the note within or above the HPI (including outside doctors names)
+For the HPI section, start with a one sentence summary with the patient’s age, gender and a list of their most important medical history based on the list of Problems from the template and indicate they are there for an evaluation in Primary Care.
+For example: “78 yo M PMHx of coronary artery disease, asthma, peripheral vascular disease and diabetes who is evaluated in Primary Care.”
+Next, put in two line breaks and then summarize the patient’s history of present illness.  Include separate paragraphs for each different medical problem discussed.  Include all relevant reported history related to each medical problem in that paragraph, even if they are discussed nonsequentially.  If there are any relevant notes that pertain to these problems listed within the template, please include these in the relevant paragraph.
+For each problem include (if discussed) duration; severity; what makes it better or worse; any medications or treatment for this and if any evaluation has been completed.
+The next section is review of symptoms (ROS)
+If any review of symptoms are positive; make this change in the ROS section; including indicating “yes” in the check box and using a short phrase to specify the issue.  If the symptoms are extensive and involve a discussion; include this in the HPI and please write “as per HPI”
+The next section is Social History. If social history is discussed (tobacco use; alcohol use; drug use; housing; who lives with the Veteran; military history; occupational history; important relationships; hobbies, religion or exercise), include that section in the appropriate area.  If this is not discussed; keep the current text from the template in this section.  Update any changes with relation to housing, tobacco use, etc.
+If FAMILY MEDICAL HISTORY is discussed, include that section right after the HPI section.
+
+The next section is medications and allergies.  Please do not make any changes to this templated section.
+In the EXAM section, leave the vitals signs listed as is.  If a different blood pressure or heart rate is noted during the exam; please include this with a dash next to the number listed in the template and a note “on recheck”.
+Include any noted physical exam findings in the appropriate area of exam using medical terminology (Gen= general exam; COR= heart; RESP=lung; Abd=abdominal exam; Ext=extremity exam).  If any skin findings are noted make an additional row “Skin” to document the findings and if any head and neck findings are noted please make an additional row below “GEN” called “HEENT” and document those findings next to that.  If nothing is noted; please use the templated normal exam in that section.
+In the Lab/Test data: please place one line break, then indicate any abnormal tests that were reviewed with the patient, including bloodwork discussed and indicate “reviewed with patient” if no abnormalities were noted.  Include any xrays, CT scans, EKGs or other diagnostic studies results discussed in this section.
+In the “ASSESSMENT/PLAN:” section, group clinical problems in descending order of importance. For each clinical problem, use a sequential number to denote the problem, followed by dashes on each new line to indicate plans for this problem. Problems should be listed in short phrases rather than full sentences.  Problems should be a medical term for which an ICD-10 code is available, if possible, but do not list the ICD-10 code. This section is intended for clinicians, so should use medical terminology.  Please use the active problem list provided when possible rather than indicating a new problem and list any medications, tests, or plans under each appropriate problem.  If the problem is not listed in the existing template, list it at the beginning; please re-order the problem list listing those items discussed most extensively first.  Do not delete any problems or text from this section.
+Example: Problem in the ASSESSMENT/PLAN:
+“1.Hypertension:
+-blood pressure at goal on current medication regimen. Goal SBP < 140.
+-Continue lisinopril and amlodipine at current dosing
+
+For the Health Maintenance section, update with the current date any vaccines that were given to indicate the current date, also update any colonoscopy, mammogram, pap smear or HPV screening, advanced directive, AAA screening or other screening if mentioned in the transcript.  If not mentioned, keep the current text in this area.
+Include at the bottom of the note this sentence: “The patient was informed of the presence of a listening and transcribing tool during the visit and given the option to opt out and agreed to proceed.”
+This is the template:
+
 
 Client initialized successfully
+openaiClient Call: 27.861s
 
 Response from LLM:
-Based on the comprehensive patient data provided, several insights can be gathered:
+78 yo M PMHx of coronary artery disease, hypertension, hyperlipidemia, bronchitis, and stroke who is evaluated in Primary Care.
 
-**Patient History and Care Summary:**
+Veteran states that he has a longstanding history of coronary artery disease and was most recently assessed in the cardiology department. He mentions that there has been increased regular monitoring since last year due to several reported symptoms of chest pain and shortness of breath. An EKG was done which indicated no significant issues, but the veteran continues to be monitored closely due to his history. The veteran is currently taking metoprolol and atorvastatin every day. His physician discussed his current medication management, ensuring the veteran understood the necessity of the prescriptions.
 
-1. **Chronic Medical Conditions:**
-   - The patient has a history of multiple chronic conditions. The problems and conditions include Diabetes Mellitus (E08.00), Hypertension, Hyperlipidemia (272.4), Congestive Heart Failure (410.90), Stroke (435.8), and Dyspnea (786.50).
-   - The latest problem recorded is hypertension managed since 2018.
+Veteran is also reviewed for hypertension management. Blood pressure readings have been fairly controlled, but the last check indicated 135/100. Currently, the veteran is on lisinopril 40mg and metoprolol 50mg as well. The veteran was provided additional counseling about maintaining a proper diet and regular exercise to help manage his blood pressure.
 
-2. **Allergies:**
-   - The patient has allergies to Penicillin (causes itching and watering eyes), Chocolate (causes diarrhea), and Mold (causes rash, itching, watering eyes). These allergies have been verified and documented multiple times.
+The history of hyperlipidemia was also discussed. Regular lipid panels have been conducted, and although LDL cholesterol levels were higher than ideal in the last lab, atorvastatin has been effective in maintaining his lipid profile. The veteran continues to adhere to dietary suggestions to manage his cholesterol levels effectively.
 
-3. **Medication Management:**
-   - The patient is on multiple medications including Atorvastatin, Lisinopril, Metoprolol, Carbamazepine, and Warfarin among others. The medication regimen highlights efforts to control cardiovascular risk factors, diabetes, and epilepsy.
+Veteran reports a previous history of bronchitis, which occasionally exacerbates with changes in weather. While there have been no severe acute episodes recently, the physician has advised keeping close monitoring, especially given his cardiac history.
 
-4. **Consultations:**
-   - The patient has a significant number of consultations, primarily in the field of Cardiology, indicating ongoing management of cardiac issues. There are also consultations from other disciplines like Audiology and Hematology.
-   - Of note, several cardiology consultations are scheduled, pending, or completed, emphasizing active monitoring and treatment of cardiac health.
+The veteran's history of stroke was reviewed. There have been no new neurologic symptoms, and the veteran is currently not on any antithrombotics except aspirin for cardiac protection. Regular follow-up with neurology has been scheduled.
 
-5. **Imaging and Laboratory Tests:**
-   - The patient has undergone a variety of radiology exams and laboratory tests as a part of routine management of their chronic conditions and to follow up on acute events.
+Veteran denies any changes in vision or hearing but follows up regularly with audiology and ophthalmology, given the past encounters noted in their records.
 
-6. **Hospitalizations and Surgeries:**
-   - A history of significant inpatient stays and surgeries further supports extensive medical intervention for chronic illnesses and acute medical needs. The surgeries and hospital stay notes include relevant diagnoses, management details, and post-operative care details.
+Review of symptoms (ROS)
 
-7. **Progress Notes and Documentation:**
-   - Regular progress notes indicate continuous assessment and adjustments of the treatment regimen. For instance, controlling Blood Pressure through diet and exercise, addressing symptoms like chest pain, and managing post-operative care adequately.
+General: Yes. Veteran reports fatigue at times.
+Cardiovascular: Yes. Chest pain and shortness of breath, as per HPI.
+Respiratory: Yes. Previous instances of bronchitis, as per HPI.
+Neurologic: Yes. History of stroke but no new symptoms.
+HEENT: No issues reported.
+Skin: No issues reported.
+HEENT: No issues reported.
+Gen: Appears well, no acute distress.
+Cor: Regular rate and rhythm; no murmurs, rubs, or gallops.
+Resp: Lungs clear to auscultation bilaterally; no wheezes, rales, or ronchi.
+Abd: Soft, non-tender, non-distended; normal bowel sounds.
+Ext: No edema, cyanosis, or clubbing noted.
 
-8. **COVID-19 Status:**
-   - Documentation includes an update regarding a positive COVID-19 PCR test in 2025, which can be critical in the context of managing existing chronic conditions.
+Lab/Test data:
+Recent cholesterol: LDL cholesterol levels were higher than ideal. Reviewed with patient.
+EKG: No significant concerns noted. Reviewed with patient.
+Blood pressure: 135/100
 
-**Insights and Recommendations:**
+ASSESSMENT/PLAN:
+1. Coronary artery disease:
+   - Continue current management with atorvastatin and metoprolol.
+   - Monitor for symptoms; follow-up with cardiology as scheduled.
+2. Hypertension:
+   - Continue lisinopril 40mg daily and metoprolol 50mg daily.
+   - Monitor and review blood pressure regularly.
+   - Dietary and lifestyle counseling to maintain BP levels.
+3. Hyperlipidemia:
+   - Continue atorvastatin 80mg daily.
+   - Monitor lipid levels regularly.
+   - Provide dietary counseling.
+4. Bronchitis:
+   - Monitor for any respiratory symptoms.
+   - Advising regular follow-up with a pulmonologist as needed.
+5. Stroke:
+   - Continues with aspirin for secondary prevention.
+   - Neurology follow-up scheduled.
 
-1. **Cardiovascular Health:**
-   - Given the chronic heart conditions, ongoing medications, and frequent cardiology consultations, a robust cardiovascular care plan including lifestyle modification and close monitoring of cardiac symptoms is essential.
-   - Future treatment should continue to focus on managing hypertension, hyperlipidemia, heart failure, and any ischemic symptoms.
+Health Maintenance:
+Influenza, high dose seasonal vaccine administered: 2023-05-16
 
-2. **Diabetes Management:**
-   - Maintaining strict glycemic control is imperative as diabetes contributes to cardiovascular risks. Current insulin regimen and oral hypoglycemics should be optimized in consultation with endocrinology if required.
-
-3. **Medication Adherence:**
-   - Ensuring patient adherence to medications is key. Potential drug interactions and side effects should be monitored closely, especially considering multiple medications.
-
-4. **Allergy Management:**
-   - Due to the multiple allergies, careful consideration must be given when prescribing medications and managing environmental exposures.
-
-5. **Preventative Measures and Vaccination:**
-   - Preventative health measures, including vaccinations, especially influenza and pneumococcal vaccines, should be up-to-date given the patient's chronic conditions and recent positive COVID-19 status.
-
-6. **Mental Health:**
-   - Given the documented episodes of depression, particularly linked to significant life events, mental health evaluation and support may be warranted. If necessary, psychiatric care should be incorporated into the treatment regimen.
-
-7. **Follow-up Care:**
-   - Close follow-up for scheduled consultations, especially in cardiology, is crucial.
-   - Regular check-ups to monitor the progress of chronic conditions and adjust treatment plans accordingly.
-
-8. **Patient Education:**
-   - Continuous education about lifestyle modifications, importance of adherence to medications, recognizing early symptoms of exacerbations of chronic conditions, and understanding the impact of allergens can be highly beneficial.
-
-Finally, an integrated and multidisciplinary approach involving cardiology, endocrinology, primary care, audiology, mental health professionals, and other relevant specialties will be pivotal in managing the complex health needs of this patient effectively.
+The patient was informed of the presence of a listening and transcribing tool during the visit and given the option to opt out and agreed to proceed.

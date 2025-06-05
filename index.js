@@ -3,6 +3,7 @@ const { openaiClient,initializeClient } = require('./openaiClient.js');
 const { processPatientData } = require('./processPatientData');
 const dotenv = require('dotenv');
 const path = require('path');
+const {prompt} = require('./prompt.js')
 
 dotenv.config({ path: path.resolve(__dirname, '.env') });
 
@@ -25,19 +26,26 @@ async function main() {
     ]
 
     // Call the vistaClient function
+   console.time('VISTA RPC Call');
+   console.log('Calling VISTA RPC...');
    const response = await vistaClient(stationNo, duz, context,rpc, params);
-   const patientData = processPatientData(JSON.parse(response).data.items);
-  //console.log('Patient Data:', patientData);
-  console.log('Patient Data:', patientData.consult.length, 'consults found');
-  console.log('Patient Data:', patientData.problem.length, 'problems found');
-  console.log('Patient Data:', patientData.allergy.length, 'allergies found');
-  console.log('Patient Data:', patientData.visit.length, 'visits found');
-  console.log('Patient Data:', patientData.document.length, 'documents found');
+   console.timeEnd('VISTA RPC Call');
 
+   const patientData = processPatientData(JSON.parse(response).data.items);
+  Object.keys(patientData).forEach(type => {
+    if(patientData[type].length === 0) return; // Skip empty types
+    console.log(`Patient Data: ${patientData[type].length} ${type}s found`);
+  });
+
+  console.time('openaiClient Call');
+  console.log('Calling OpenAI client...');
   // Try to call the OpenAI client with the patient data
+  //const prompt = 'Analyze the following patient data and provide insights:'
+  console.log(prompt)
   const client = initializeClient();  
-  const message = `Analyze the following patient data and provide insights: ${JSON.stringify(patientData)}`;
+  const message = prompt + JSON.stringify(patientData);
   const llmResponse = await openaiClient(client, message);
+  console.timeEnd('openaiClient Call');
   console.log('\nResponse from LLM:');
   console.log(llmResponse);
 
