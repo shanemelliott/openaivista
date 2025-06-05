@@ -65,6 +65,7 @@ function processPatientData(items) {
             case 'document':
               patientData.document.push({
                 type,
+                nationalTitle: item.nationalTitle,
                 typeName: item.documentTypeName,
                 dateTime: item.referenceDateTime,
                 text: item.text
@@ -96,6 +97,7 @@ function processPatientData(items) {
               patientData.patient.push({
                 type,
                 name: item.fullName,
+                dob: item.dateOfBirth,
                 gender: item.genderName,
                 disability: item.disability,
                 veteran: item.veteran

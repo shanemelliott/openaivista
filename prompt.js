@@ -1,5 +1,5 @@
 module.exports = {
-    prompt: `Please use the following template to create a primary care note according the following instructions:
+    prompt: [`Please use the following template to create a primary care note according the following instructions:
 (1) Use same font size with no bolding or italics. (2) Use two line breaks between different sections. (3) When talking about the patient, use “Veteran” instead of “patient”. (4) Avoid the words: “denies”, “reports”, “cooperative”. (5) Do not include any information that was not explicitly discussed in the transcript. (6) do not change the format, existing data or spacing of the template unless specifically indicated below. (7) do not delete any information that is already populated in the note within or above the HPI (including outside doctors names)  
 For the HPI section, start with a one sentence summary with the patient’s age, gender and a list of their most important medical history based on the list of Problems from the template and indicate they are there for an evaluation in Primary Care.  
 For example: “78 yo M PMHx of coronary artery disease, asthma, peripheral vascular disease and diabetes who is evaluated in Primary Care.”
@@ -25,4 +25,46 @@ Include at the bottom of the note this sentence: “The patient was informed of 
 This is the template:
 
 `,
+`As a primary care internist, I need a concise summary of a patient's progress notes from various visits. Please provide a 2- summary focusing only on pertinent updates that would be most relevant for me to know. At the beginning of the summary, mention the dates that the summary is summarizing in the format mm/yyyy to mm/yyyy. This includes notable changes in the patient's condition, any new diagnoses, updates on ongoing treatments, significant test results, and any modifications to medications or care plans. Exclude any repetitive information or minor details that are not essential for understanding the patient's primary health updates. After the summary, provide a bulleted list first of key medications the patient is on, then key diagnoses, then summarize vital signs trends, then any referrals/consultants they see (speciality and name of consultant), then provide a separate list of important lab results, then provide a separate list of key diagnostic test results. Here are the notes:paragraph "  
+`,
+`Can you please summarize the basic demographic information about the patient?  Include name, age sex and any other relevant information that would be helpful to know about the patient.  Please do not include any information that is not explicitly discussed in the transcript.  Here is the transcript: "`
+,
+`You are a clinical documentation assistant. Given structured or semi-structured patient data, generate a problem-specific summary focusing on a single medical problem. Your output should include the following components, organized clearly and concisely:
+Problem Name: State the specific medical problem (e.g., Type 2 Diabetes Mellitus, Acute Kidney Injury).
+Onset and Course: Describe when the problem began or was first identified, and summarize its clinical course (e.g., acute, chronic, relapsing). Include relevant contextual history or events contributing to the onset or exacerbation.
+Relevant Labs and Tests: Identify and summarize lab results, imaging, pathology, or other diagnostics directly related to the problem. Include dates, trends, and interpretation where possible.
+Medication History: Provide a targeted summary of medications used for the problem, including past and current therapies, dosage changes, and treatment response.
+Missing or Absent Data: Clearly note any relevant diagnostics or procedures that would be expected for this condition but are not found in the available data (e.g., “No recent A1c noted,” “No echocardiogram on record,” “No colonoscopy found for CRC screening”).
+Guidelines:
+Use clinical reasoning to assess relevance.
+Include only data pertinent to the identified problem.
+Use structured medical language appropriate for clinician readers.
+Be concise, evidence-focused, and exclude unrelated information.
+Example Input Format:
+Problem: Chronic Kidney Disease  
+Patient Data: [structured EHR notes, labs, medication list, radiology reports, procedural history, etc.]
+Example Output:
+**Problem:** Chronic Kidney Disease (CKD), Stage 3b
+ 
+**Onset and Course:**  
+CKD first noted in 2021 with a gradually declining eGFR trend. No documented etiology but patient has long-standing hypertension and Type 2 diabetes. Most recent eGFR (March 2025) was 38 mL/min/1.73m².
+ 
+**Relevant Labs and Tests:**  
+- Serum Creatinine: 1.9 mg/dL (March 2025)  
+- eGFR: 38 → 42 → 46 mL/min/1.73m² over past 18 months  
+- Urine ACR: 180 mg/g (December 2024), consistent with albuminuria  
+- Electrolytes: stable, with mild hyperkalemia noted intermittently
+ 
+**Medication History:**  
+- Lisinopril 20 mg daily since 2022  
+- Metformin discontinued in 2023 due to reduced renal function  
+- No SGLT2 inhibitors prescribed
+ 
+**Missing or Absent Data:**  
+- No renal ultrasound found in records  
+- No nephrology consultation documented  
+- No recent parathyroid hormone (PTH) or vitamin D levels`
+
+]
+
 }

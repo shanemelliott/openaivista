@@ -102,3 +102,78 @@ Health Maintenance:
 Influenza, high dose seasonal vaccine administered: 2023-05-16
 
 The patient was informed of the presence of a listening and transcribing tool during the visit and given the option to opt out and agreed to proceed.
+
+
+#############################################################################################
+
+C:\Users\VACOEllioS1\apps\openai-node-orig>node .
+Calling VISTA RPC...
+VISTA RPC Call: 6.343s
+Patient Data: 1 patients found
+Patient Data: 6 problems found
+Patient Data: 3 allergys found
+Patient Data: 31 consults found
+Patient Data: 554 vitals found
+Patient Data: 379 labs found
+Patient Data: 394 orders found
+Patient Data: 63 meds found
+Patient Data: 44 factors found
+Patient Data: 2 immunizations found
+Patient Data: 488 appointments found
+Patient Data: 2 surgerys found
+Patient Data: 88 documents found
+Patient Data: 192 visits found
+Calling OpenAI client...
+As a primary care internist, I need a concise summary of a patient's progress notes from various visits. Please provide a 2-paragraph summary focusing only on pertinent updates that would be most relevant for me to know. At the beginning of the summary, mention the dates that the summary is summarizing in the format mm/yyyy to mm/yyyy. This includes notable changes in the patient's condition, any new diagnoses, updates on ongoing treatments, significant test results, and any modifications to medications or care plans. Exclude any repetitive information or minor details that are not essential for understanding the patient's primary health updates. After the summary, provide a bulleted list first of key medications the patient is on, then key diagnoses, then summarize vital signs trends, then any referrals/consultants they see (speciality and name of consultant), then provide a separate list of important lab results, then provide a separate list of key diagnostic test results. Here are the notes: "
+Client initialized successfully
+openaiClient Call: 24.473s
+
+Response from LLM:
+### Summary of Progress Notes (10/2023 to 04/2024)
+
+Between October 2023 and April 2024, Mr. Sheba Harris presented for multiple follow-up appointments with notable clinical activities and updates. On 10/23/2023, a lung nodule was identified on an LDCT scan, measured at 5mm, and a follow-up LDCT was scheduled for 12 months. His medication regimen includes atorvastatin, metoprolol, and lisinopril which have been consistently refilled, and new medications such as tramadol for pain management were discussed. His existing conditions of hyperlipidemia, hypertension, and diabetes remain under management with continued medication adjustments based on lab results indicating controlled diabetes but elevated LDL cholesterol levels.
+
+Significant diagnostic tests and procedures included ongoing lab tests like Lipid Profiles, Creatinine, Sodium, Chloride, and Glucose levels. On 1/19/2024, vital signs monitoring indicated elevated blood pressure readings (135/100 mmHg), high temperatures, and varying pulse rates, indicating the need for regular monitoring. He attended several cardiology and pulmonary consultations, with recommendations to continue current medications, manage diet and exercise for hypertension, and future follow-ups. Notable specialty consults scheduled included cardiology and audiology services.
+
+### Key Medications:
+- Atorvastatin Calcium 80mg
+- Lisinopril 20mg
+- Metoprolol Succinate 100mg
+- Tramadol (for clinic administration)
+- Valproic Acid 250mg
+- Warfarin (Coumadin) 2.5mg
+
+### Key Diagnoses:
+- Type 2 Diabetes Mellitus
+- Hypertension
+- Hyperlipidemia
+- Coronary Artery Disease
+- Chronic Renal Insufficiency
+- Congestive Heart Failure
+- Chronic Atrial Fibrillation
+
+### Vital Signs Trends:
+- Blood Pressure: Ranged from 120/80 to 135/100 mmHg
+- Pulse: Varied from 47 to 105 beats per minute
+- Temperature: Predominantly normal but occasional spikes up to 103.6°F
+- Weight: Recorded between 170 to 240 pounds, slight fluctuations
+- Pulse Oximetry: Generally stable, recorded mainly in the 90s percentage
+
+### Referrals/Consultants:
+- Cardiology: Provider, One (various dates)
+- Pulmonary/Chest: Provider, Two
+- Audiology: Provider, Three
+
+### Important Lab Results:
+- LDL Cholesterol: 132 mg/dL (Elevated)
+- Serum Creatinine: 1.1 to 1.5 mg/dL
+- Glucose: Fluctuated between 78 to 300 mg/dL
+- A1C: Stable at 8.2% indicating controlled diabetes
+
+### Key Diagnostic Test Results:
+- LDCT on 10/23/2023: 5mm Lung Nodule, next scan in 12 months
+- EKG from recent visits: Showing right bundle branch block, no new significant changes
+- Echocardiogram results indicated an ejection fraction at around 25%, no significant coronary disease
+- X-ray: Knee MRI normal but noted minor degeneration consistent with age-related changes
+
+This compilation of Mr. Harris's medical records provides a cohesive overview of his ongoing management and the necessary continuation of current therapeutic strategies. Regular consultations, diligent monitoring, and medication adherence are crucial for maintaining his health stability.

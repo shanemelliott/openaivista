@@ -28,13 +28,15 @@ async function main() {
     const response = await vistaClient(stationNo, duz, context,rpc, params);
    const patientData = processPatientData(JSON.parse(response).data.items);
 
-  console.log('Patient Data:', patientData.consult.length, 'consults found');
-  console.log('Patient Data:', patientData.problem.length, 'problems found');
-  console.log('Patient Data:', patientData.allergy.length, 'allergies found');
-  console.log('Patient Data:', patientData.visit.length, 'visits found');
-  console.log('Patient Data:', patientData.document.length, 'documents found');
-  console.log('Patient Data:', patientData.lab.length, 'labs found');
+  Object.keys(patientData).forEach(type => {
+    if(patientData[type].length === 0) return; // Skip empty types
+    console.log(`Patient Data: ${patientData[type].length} ${type}s found`);
+  });
 
+  Object.keys(patientData).forEach(type => {
+    if (patientData[type].length === 0) return; // Skip empty types
+    console.log(`First ${type}:`, patientData[type][0]);  
+  });
 
    } catch (error) {
     console.error('Error occurred:', error.message);

@@ -3,6 +3,7 @@ const { openaiClient,initializeClient } = require('./openaiClient.js');
 const { processPatientData } = require('./processPatientData');
 const dotenv = require('dotenv');
 const path = require('path');
+const { encoding_for_model } = require("@dqbd/tiktoken");
 const {prompt} = require('./prompt.js')
 
 dotenv.config({ path: path.resolve(__dirname, '.env') });
@@ -15,12 +16,14 @@ async function main() {
   
     // Define parameters for the RPC call
     const context = 'LHS RPC CONTEXT';
-    const stationNo = '500';
+    const stationNo = process.env.STN;
     const duz = process.env.DUZ;
     const rpc = 'VPR GET PATIENT DATA JSON';
     const params = [{
       "namedArray": {
-        "patientId": "237"
+        "patientId": process.env.DFN,
+        "start": "3240805",
+        "stop":"3250605"
             }
         }
     ]
@@ -28,27 +31,68 @@ async function main() {
     // Call the vistaClient function
    console.time('VISTA RPC Call');
    console.log('Calling VISTA RPC...');
-   const response = await vistaClient(stationNo, duz, context,rpc, params);
+   if(params[0].namedArray.start){
+      console.log('Using date range:', params[0].namedArray.start, 'to', params[0].namedArray.stop);
+   }
+    const response = await vistaClient(stationNo, duz, context,rpc, params);
    console.timeEnd('VISTA RPC Call');
 
-   const patientData = processPatientData(JSON.parse(response).data.items);
+  //const patientData = processPatientData(JSON.parse(response).data.items);
+  /* if necessary remove some of the following types from the patientData object
+  
+  filter by date:
+  ,
+        "start": "3250515",
+        "stop":"3250605"
+
+
+  const types = [
+  'patient', 'problem', 'allergy', 'consult', 'vital', 'lab', 'order', 'treatment',
+  'med', 'ptf', 'factor', 'immunization', 'cpt', 'education', 'pov', 'image',
+  'appointment', 'surgery', 'document', 'visit'
+  ];
+
+  */
+  //delete patientData.factor;
+  //delete patientData.vital;
+  //delete patientData.order;
+  
+
+
   Object.keys(patientData).forEach(type => {
     if(patientData[type].length === 0) return; // Skip empty types
     console.log(`Patient Data: ${patientData[type].length} ${type}s found`);
   });
+  
+// Log the first document as an example
+if (patientData.document && patientData.document.length > 0) {
+  console.log('\nExample document:', patientData.document[0]);
+}
 
   console.time('openaiClient Call');
   console.log('Calling OpenAI client...');
   // Try to call the OpenAI client with the patient data
   //const prompt = 'Analyze the following patient data and provide insights:'
-  console.log(prompt)
-  const client = initializeClient();  
-  const message = prompt + JSON.stringify(patientData);
-  const llmResponse = await openaiClient(client, message);
-  console.timeEnd('openaiClient Call');
-  console.log('\nResponse from LLM:');
-  console.log(llmResponse);
+  console.log('Using prompt:');
 
+  console.log(prompt[3])
+
+  //check for token size
+  const enc = encoding_for_model("gpt-4o"); // or your model
+  const message = prompt[3] + JSON.stringify(patientData);
+  
+  const tokens = enc.encode(message);
+  console.log("Token count:", tokens.length);
+ 
+  if (tokens.length < 128000) {
+    const client = initializeClient();
+    const llmResponse = await openaiClient(client, message);
+    console.timeEnd('openaiClient Call');
+    console.log('\n################################# Response from LLM: ############################');
+    console.log(llmResponse);
+  }else{
+    console.log('token size is too large for the model, please reduce the input size, please decrease to less than 128000 tokens');
+  }
 
   } catch (error) {
     console.error('Error occurred:', error.message);
