@@ -5,3 +5,38 @@ This repository contains a demo for using OpenAI's API to analyze VistA EMR data
 The goal of this demo is to demonstrate how to use OpenAI's API to analyze patient data and generate summaries.
 
 You can view an example of analysis results in the [output.txt](./output.txt) file.
+
+
+# Notes
+
+- My discovery identified:
+  - Veterans have ~1.2M to 2M tokens if you pull their entire VistA record.
+  - With this limitation, the best I can get is about 6 months of data for a patient.
+  - If there is an admission in that time period, I can get about 3 months of data.
+  - I started some pre-processing to reduce the number of tokens by pasing each type of data seperatly to the LLM. The types of data returned from the VistA API are:
+    - patient
+    - problem
+    - allergy
+    - consult
+    - vital
+    - lab
+    - order
+    - treatment
+    - med
+    - ptf *
+    - factor
+    - immunization
+    - cpt *
+    - education *
+    - pov *
+    - image *
+    - appointment
+    - surgery
+    - document
+    - visit
+  - The items listed above with an '*' have not been included in the pre-processing yet.
+  - I also explored converting to pdf and processing with Contoso, but the 400 page pdf froze the web interface while trying to create images from the pdf. 
+  - Plans for the future:
+    - Add the remaining items to the pre-processing.
+    - Explore a python version and including pre-processing locally with something like scispaCy,medspacy, or similar.
+    - As this is a POC, other features are left out like patient selection, prompt selection,dateselection etc. This all is done manually in the code.
