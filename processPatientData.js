@@ -1,6 +1,11 @@
 /*
+
+Here we process the patient data and categorize it into different types.
+This is a simplified version that processes some of the types and returns an object with categorized data.
+
 Todo:
     Process the rest of the types.......
+    consider combining the preprocess with this step.  
  done:
  'patient-x', 'problem-X', 'allergy-X', 'consult-X', 'vital-x', 'lab-x', 'order-x', 'treatment',
   'med-x',  'factor-x', 'immunization-x', 'surgery-x', 'document-X', 'visit-X',appointment-x
@@ -15,7 +20,7 @@ const types = [
   'appointment', 'surgery', 'document', 'visit'
 ];
 
-function processPatientData(items) {
+async function processPatientData(items) {
   const patientData = {};
   types.forEach(type => { patientData[type] = []; });
 
@@ -111,7 +116,7 @@ function processPatientData(items) {
                 value: item.result,
                 units: item.units,
               });
-              break; 
+              break;
             case 'order':
               patientData.order.push({
                 type,
@@ -119,7 +124,7 @@ function processPatientData(items) {
                 name: item.content,
                 status: item.statusName
               });
-              break; 
+              break;
             case 'factor':
               patientData.factor.push({
                 type,
@@ -127,14 +132,14 @@ function processPatientData(items) {
                 name: item.name,
                 category: item.categoryName
               });
-              break; 
+              break;
             case 'immunization':
               patientData.immunization.push({
                 type,
                 dateTime: item.administeredDateTime,
                 name: item.name
               });
-              break; 
+              break;
             case 'surgery':
               patientData.surgery.push({
                 type,
@@ -142,7 +147,7 @@ function processPatientData(items) {
                 typeName: item.TypeName,
                 kind: item.kind
               });
-              break; 
+              break;
             case 'appointment':
               patientData.appointment.push({
                 type,
@@ -151,8 +156,7 @@ function processPatientData(items) {
                 status: item.appointmentStatus,
                 careType: item.stopCodeName
               });
-              break; 
-            // ...repeat for each type as needed...
+              break;
             default:
               break;
           }

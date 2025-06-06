@@ -6,36 +6,43 @@ const path = require('path');
 dotenv.config({ path: path.resolve(__dirname, '.env') });
 
 // Function to initialize an Azure OpenAI client
-function initializeClient() {
+function initializeClient(model) {
   const apiKey = process.env.AZURE_OPENAI_API_KEY;
 
   if (!apiKey) {
     throw new Error('API key is missing from environment variables.');
   }
- 
+  //o3-mini 2025-01-01
+  //need to manually change the apiVersion if you change the model
+  //todo: do this automatically based on the model name
+
+
   const clientConfig = {
     apiKey,
     apiVersion: '2024-02-15-preview',  // Using the preview version for GPT-4o access
-    azureEndpoint: 'https://spd-prod-openai-va-apim.azure-api.us/api/openai/deployments/gpt-4o/chat/completions?api-version=2024-02-15-preview'  // VA-specific endpoint
-  };               
-  console.log('Client initialized successfully');
+    azureEndpoint: `https://spd-prod-openai-va-apim.azure-api.us/api/openai/deployments/${model}/chat/completions`  // VA-specific endpoint
+  };
   return clientConfig;
 }
 
 // Function to query the LLM model
 async function openaiClient(client, message) {
- 
-  const url = `${client.azureEndpoint}`;
+
+  const url = `${client.azureEndpoint}?api-version=${client.apiVersion}`;
+  const body = {
+    messages: [
+      {
+        role: 'user',
+        content: message
+      }
+    ]
+  };
 
   try {
     const response = await axios.post(
       url,
-       {messages: [
-      {
-        role: "user",
-        content: message
-      }
-    ]},
+      body
+      ,
       {
         headers: {
           'api-key': client.apiKey,

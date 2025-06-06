@@ -1,3 +1,7 @@
+These are some sample outputs. 
+
+#################################################################################################
+
 Calling VISTA RPC...
 VISTA RPC Call: 5.887s
 Patient Data: 1 patients found
