@@ -23,7 +23,7 @@ You can view an example of analysis results in the [output.txt](./output.txt) fi
     - order
     - treatment
     - med
-    - ptf *
+    - ptf 
     - factor
     - immunization
     - cpt *
@@ -40,3 +40,4 @@ You can view an example of analysis results in the [output.txt](./output.txt) fi
     - Add the remaining items to the pre-processing.
     - Explore a python version and including pre-processing locally with something like scispaCy,medspacy, or similar.
     - As this is a POC, other features are left out like patient selection, prompt selection,dateselection etc. This all is done manually in the code.
+  - 6.24.25: Update, I can now process an entire medical record ~10 mb in size. I had to break the data into smaller chunks and process each chunk individually. I also had to add some logic to ensure that the chunks did not exceed the token limit. This process takes a total of 10 minutes to process a 10 mb record. The results are then combined into a single summary. An updated output file is included in the repo. 

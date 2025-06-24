@@ -21,7 +21,7 @@ async function main() {
     const stationNo = process.env.STN;
     const duz = process.env.DUZ;
     const rpc = 'VPR GET PATIENT DATA JSON';
-    
+
     const params = [{
       "namedArray": {
         "patientId": process.env.DFN
@@ -29,7 +29,7 @@ async function main() {
     }
     ]
     // Call the vistaClient function
-    //track time for the RPC call
+
     console.log('################################# VISTA RPC Call: ############################');
     console.time('Total Time');
     console.time('VISTA RPC Call');
@@ -43,10 +43,8 @@ async function main() {
     //process the RPC response. 
     //VPR GET PATIENT DATA JSON returns a JSON object with patient data.  This has alot of text that needs to be processed to decrease the amount of tokens sent to the LLM.
     //The processPatientData function will extract the relevant data from the response and return an object with the patient data types and counts. 
-    // Todo: Review the relevant data I am pulling from the resposne with clinical stakehoders to ensure we are not missing any important data.
-    
-    
-      // Output to a JSON file RAW VistA
+
+    // Output to a JSON file RAW VistA
     let outputPath = path.resolve(__dirname, 'output', '_VistARaw.json');
     if (!fs.existsSync(path.dirname(outputPath))) {
       fs.mkdirSync(path.dirname(outputPath), { recursive: true });
@@ -58,9 +56,9 @@ async function main() {
     } catch (e) {
       jsonResponse = { raw: response }; // fallback if not valid JSON
     }
-      fs.writeFileSync(outputPath, JSON.stringify(jsonResponse, null, 2), 'utf8');
+    fs.writeFileSync(outputPath, JSON.stringify(jsonResponse, null, 2), 'utf8');
     console.log('JSON written to', outputPath);
-    
+
     const patientData = await processPatientData(JSON.parse(response).data.items);
     console.log('\n################################# Patient Data: ############################');
     // Log the patient data types and counts
@@ -69,16 +67,13 @@ async function main() {
       if (patientData[type].length === 0) return; // Skip empty types
       console.log(`Patient Data: ${patientData[type].length} ${type}s found`);
     });
-   
-
-
-       // Output to a JSON file 
-     outputPath = path.resolve(__dirname, 'output', '_Preprocessed.json');
+    // Output to a JSON file 
+    outputPath = path.resolve(__dirname, 'output', '_Preprocessed.json');
     if (!fs.existsSync(path.dirname(outputPath))) {
       fs.mkdirSync(path.dirname(outputPath), { recursive: true });
     }
     // If response is a JSON string, parse it first
-     jsonResponse;
+    jsonResponse;
     try {
       jsonResponse = JSON.parse(patientData);
     } catch (e) {
@@ -89,25 +84,25 @@ async function main() {
 
 
 
- //get initial tokencount for patietData.  This where we are starting from before we preprocess the data.
+    //get initial tokencount for patietData.  This where we are starting from before we preprocess the data.
     var enc = encoding_for_model("gpt-4o"); // or your model 
     const initialMessage = JSON.stringify(patientData);
     const initialTokens = enc.encode(initialMessage);
     console.log("Initial Token count:", initialTokens.length);
     //use preprocessor to preprocess each type
     //This will reduce the amount of text sent to the LLM and help with token limits. I am sending each 'Type' to the LLM one at a time with a prompt that asks the LLM to summarize the data.(see preprocess for prompt)
-    
+
     //#########################################PReProcess wiht LLM#########################################
-     console.log('\n################################# Pre-Processe Patient Data with LLM: ############################');
-    
+    console.log('\n################################# Pre-Processe Patient Data with LLM: ############################');
+
     var processedData = await preprocess(patientData);
     // Output to a JSON file  after preprocessing 
-     outputPath = path.resolve(__dirname, 'output', '_LLMProcessed.json');
+    outputPath = path.resolve(__dirname, 'output', '_LLMProcessed.json');
     if (!fs.existsSync(path.dirname(outputPath))) {
       fs.mkdirSync(path.dirname(outputPath), { recursive: true });
     }
     // If response is a JSON string, parse it first
-     jsonResponse;
+    jsonResponse;
     try {
       jsonResponse = JSON.parse(processedData);
     } catch (e) {
@@ -115,13 +110,14 @@ async function main() {
     }
     fs.writeFileSync(outputPath, JSON.stringify(jsonResponse, null, 2), 'utf8');
     console.log('JSON written to', outputPath);
-   
+
     console.log('\n################################# Processed Patient Data with LLM: ############################');
     console.time('openaiClient Call');
     console.log('Calling OpenAI client...');
     // Try to call the OpenAI client with the patient data
     console.log('Using prompt:');
     //use the promt from prompt.js
+    console.log('\n################################# Processed Patient with the below prompt: ############################');
     console.log(prompt[13])
     //check for token size
     enc = encoding_for_model("gpt-4o"); // or your model
@@ -133,7 +129,7 @@ async function main() {
     //If the token size is too large, we will log a message and not call the LLM.
     if (tokens.length < 128000) {
       const client = initializeClient('gpt-4o'); //note: today, the apiversion has to bemanually changed in the openaiClient.js file if you change the model
-     // const llmResponse = await openaiClient(client, message);
+      // const llmResponse = await openaiClient(client, message);
       console.timeEnd('openaiClient Call');
       console.log('\n################################# Response from LLM: ############################');
       //console.log(llmResponse);
