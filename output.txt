@@ -1,183 +1,327 @@
-These are some sample outputs. 
-
-#################################################################################################
-
-Calling VISTA RPC...
-VISTA RPC Call: 5.887s
-Patient Data: 1 patients found
-Patient Data: 6 problems found
-Patient Data: 3 allergys found
-Patient Data: 31 consults found
-Patient Data: 554 vitals found
-Patient Data: 379 labs found
-Patient Data: 394 orders found
-Patient Data: 63 meds found
-Patient Data: 44 factors found
-Patient Data: 2 immunizations found
-Patient Data: 488 appointments found
-Patient Data: 2 surgerys found
-Patient Data: 88 documents found
-Patient Data: 192 visits found
-Calling OpenAI client...
-Please use the following template to create a primary care note according the following instructions:
-(1) Use same font size with no bolding or italics. (2) Use two line breaks between different sections. (3) When talking about the patient, use “Veteran” instead of “patient”. (4) Avoid the words: “denies”, “reports”, “cooperative”. (5) Do not include any information that was not explicitly discussed in the transcript. (6) do not change the format, existing data or spacing of the template unless specifically indicated below. (7) do not delete any information that is already populated in the note within or above the HPI (including outside doctors names)
-For the HPI section, start with a one sentence summary with the patient’s age, gender and a list of their most important medical history based on the list of Problems from the template and indicate they are there for an evaluation in Primary Care.
-For example: “78 yo M PMHx of coronary artery disease, asthma, peripheral vascular disease and diabetes who is evaluated in Primary Care.”
-Next, put in two line breaks and then summarize the patient’s history of present illness.  Include separate paragraphs for each different medical problem discussed.  Include all relevant reported history related to each medical problem in that paragraph, even if they are discussed nonsequentially.  If there are any relevant notes that pertain to these problems listed within the template, please include these in the relevant paragraph.
-For each problem include (if discussed) duration; severity; what makes it better or worse; any medications or treatment for this and if any evaluation has been completed.
-The next section is review of symptoms (ROS)
-If any review of symptoms are positive; make this change in the ROS section; including indicating “yes” in the check box and using a short phrase to specify the issue.  If the symptoms are extensive and involve a discussion; include this in the HPI and please write “as per HPI”
-The next section is Social History. If social history is discussed (tobacco use; alcohol use; drug use; housing; who lives with the Veteran; military history; occupational history; important relationships; hobbies, religion or exercise), include that section in the appropriate area.  If this is not discussed; keep the current text from the template in this section.  Update any changes with relation to housing, tobacco use, etc.
-If FAMILY MEDICAL HISTORY is discussed, include that section right after the HPI section.
-
-The next section is medications and allergies.  Please do not make any changes to this templated section.
-In the EXAM section, leave the vitals signs listed as is.  If a different blood pressure or heart rate is noted during the exam; please include this with a dash next to the number listed in the template and a note “on recheck”.
-Include any noted physical exam findings in the appropriate area of exam using medical terminology (Gen= general exam; COR= heart; RESP=lung; Abd=abdominal exam; Ext=extremity exam).  If any skin findings are noted make an additional row “Skin” to document the findings and if any head and neck findings are noted please make an additional row below “GEN” called “HEENT” and document those findings next to that.  If nothing is noted; please use the templated normal exam in that section.
-In the Lab/Test data: please place one line break, then indicate any abnormal tests that were reviewed with the patient, including bloodwork discussed and indicate “reviewed with patient” if no abnormalities were noted.  Include any xrays, CT scans, EKGs or other diagnostic studies results discussed in this section.
-In the “ASSESSMENT/PLAN:” section, group clinical problems in descending order of importance. For each clinical problem, use a sequential number to denote the problem, followed by dashes on each new line to indicate plans for this problem. Problems should be listed in short phrases rather than full sentences.  Problems should be a medical term for which an ICD-10 code is available, if possible, but do not list the ICD-10 code. This section is intended for clinicians, so should use medical terminology.  Please use the active problem list provided when possible rather than indicating a new problem and list any medications, tests, or plans under each appropriate problem.  If the problem is not listed in the existing template, list it at the beginning; please re-order the problem list listing those items discussed most extensively first.  Do not delete any problems or text from this section.
-Example: Problem in the ASSESSMENT/PLAN:
-“1.Hypertension:
--blood pressure at goal on current medication regimen. Goal SBP < 140.
--Continue lisinopril and amlodipine at current dosing
-
-For the Health Maintenance section, update with the current date any vaccines that were given to indicate the current date, also update any colonoscopy, mammogram, pap smear or HPV screening, advanced directive, AAA screening or other screening if mentioned in the transcript.  If not mentioned, keep the current text in this area.
-Include at the bottom of the note this sentence: “The patient was informed of the presence of a listening and transcribing tool during the visit and given the option to opt out and agreed to proceed.”
-This is the template:
-
-
-Client initialized successfully
-openaiClient Call: 27.861s
-
-Response from LLM:
-78 yo M PMHx of coronary artery disease, hypertension, hyperlipidemia, bronchitis, and stroke who is evaluated in Primary Care.
-
-Veteran states that he has a longstanding history of coronary artery disease and was most recently assessed in the cardiology department. He mentions that there has been increased regular monitoring since last year due to several reported symptoms of chest pain and shortness of breath. An EKG was done which indicated no significant issues, but the veteran continues to be monitored closely due to his history. The veteran is currently taking metoprolol and atorvastatin every day. His physician discussed his current medication management, ensuring the veteran understood the necessity of the prescriptions.
-
-Veteran is also reviewed for hypertension management. Blood pressure readings have been fairly controlled, but the last check indicated 135/100. Currently, the veteran is on lisinopril 40mg and metoprolol 50mg as well. The veteran was provided additional counseling about maintaining a proper diet and regular exercise to help manage his blood pressure.
-
-The history of hyperlipidemia was also discussed. Regular lipid panels have been conducted, and although LDL cholesterol levels were higher than ideal in the last lab, atorvastatin has been effective in maintaining his lipid profile. The veteran continues to adhere to dietary suggestions to manage his cholesterol levels effectively.
-
-Veteran reports a previous history of bronchitis, which occasionally exacerbates with changes in weather. While there have been no severe acute episodes recently, the physician has advised keeping close monitoring, especially given his cardiac history.
-
-The veteran's history of stroke was reviewed. There have been no new neurologic symptoms, and the veteran is currently not on any antithrombotics except aspirin for cardiac protection. Regular follow-up with neurology has been scheduled.
-
-Veteran denies any changes in vision or hearing but follows up regularly with audiology and ophthalmology, given the past encounters noted in their records.
-
-Review of symptoms (ROS)
-
-General: Yes. Veteran reports fatigue at times.
-Cardiovascular: Yes. Chest pain and shortness of breath, as per HPI.
-Respiratory: Yes. Previous instances of bronchitis, as per HPI.
-Neurologic: Yes. History of stroke but no new symptoms.
-HEENT: No issues reported.
-Skin: No issues reported.
-HEENT: No issues reported.
-Gen: Appears well, no acute distress.
-Cor: Regular rate and rhythm; no murmurs, rubs, or gallops.
-Resp: Lungs clear to auscultation bilaterally; no wheezes, rales, or ronchi.
-Abd: Soft, non-tender, non-distended; normal bowel sounds.
-Ext: No edema, cyanosis, or clubbing noted.
-
-Lab/Test data:
-Recent cholesterol: LDL cholesterol levels were higher than ideal. Reviewed with patient.
-EKG: No significant concerns noted. Reviewed with patient.
-Blood pressure: 135/100
-
-ASSESSMENT/PLAN:
-1. Coronary artery disease:
-   - Continue current management with atorvastatin and metoprolol.
-   - Monitor for symptoms; follow-up with cardiology as scheduled.
-2. Hypertension:
-   - Continue lisinopril 40mg daily and metoprolol 50mg daily.
-   - Monitor and review blood pressure regularly.
-   - Dietary and lifestyle counseling to maintain BP levels.
-3. Hyperlipidemia:
-   - Continue atorvastatin 80mg daily.
-   - Monitor lipid levels regularly.
-   - Provide dietary counseling.
-4. Bronchitis:
-   - Monitor for any respiratory symptoms.
-   - Advising regular follow-up with a pulmonologist as needed.
-5. Stroke:
-   - Continues with aspirin for secondary prevention.
-   - Neurology follow-up scheduled.
-
-Health Maintenance:
-Influenza, high dose seasonal vaccine administered: 2023-05-16
-
-The patient was informed of the presence of a listening and transcribing tool during the visit and given the option to opt out and agreed to proceed.
-
-
-#############################################################################################
-
 C:\Users\VACOEllioS1\apps\openai-node-orig>node .
+################################# VISTA RPC Call: ############################
 Calling VISTA RPC...
-VISTA RPC Call: 6.343s
+VISTA RPC Call: 24.370s
+JSON written to C:\Users\VACOEllioS1\apps\openai-node-orig\output\_VistARaw.json
+
+################################# Patient Data: ############################
+Patient Data Types and Counts:
 Patient Data: 1 patients found
-Patient Data: 6 problems found
-Patient Data: 3 allergys found
-Patient Data: 31 consults found
-Patient Data: 554 vitals found
-Patient Data: 379 labs found
-Patient Data: 394 orders found
-Patient Data: 63 meds found
-Patient Data: 44 factors found
-Patient Data: 2 immunizations found
-Patient Data: 488 appointments found
-Patient Data: 2 surgerys found
-Patient Data: 88 documents found
-Patient Data: 192 visits found
+Patient Data: 42 problems found
+Patient Data: 2 allergys found
+Patient Data: 109 consults found
+Patient Data: 724 vitals found
+Patient Data: 2106 labs found
+Patient Data: 1053 orders found
+Patient Data: 281 meds found
+Patient Data: 2 ptfs found
+Patient Data: 562 factors found
+Patient Data: 46 immunizations found
+Patient Data: 73 appointments found
+Patient Data: 4 surgerys found
+Patient Data: 937 documents found
+Patient Data: 672 visits found
+JSON written to C:\Users\VACOEllioS1\apps\openai-node-orig\output\_Preprocessed.json
+Initial Token count: 871449
+
+################################# Pre-Processe Patient Data with LLM: ############################
+Processing patient data...
+Token count: 143
+Calling OpenAI client...patient
+Token count: 143
+Processing problem data...
+Token count: 1538
+Calling OpenAI client...problem
+Token count: 1538
+Processing allergy data...
+Token count: 149
+Calling OpenAI client...allergy
+Token count: 149
+Processing consult data...
+Token count: 26962
+Calling OpenAI client...consult
+Token count: 26962
+Processing vital data...
+Token count: 21946
+Calling OpenAI client...vital
+Token count: 21946
+Processing lab data...
+Token count: 91685
+Calling OpenAI client...lab
+Token count: 91685
+Processing order data...
+Token count: 58340
+Calling OpenAI client...order
+Token count: 58340
+Processing med data...
+Token count: 16444
+Calling OpenAI client...med
+Token count: 16444
+Processing ptf data...
+Token count: 237
+Calling OpenAI client...ptf
+Token count: 237
+Processing factor data...
+Token count: 19829
+Calling OpenAI client...factor
+Token count: 19829
+Processing immunization data...
+Token count: 1496
+Calling OpenAI client...immunization
+Token count: 1496
+Processing appointment data...
+Token count: 2843
+Calling OpenAI client...appointment
+Token count: 2843
+Processing surgery data...
+Token count: 179
+Calling OpenAI client...surgery
+Token count: 179
+Processing document data...
+Token count: 603297
+token size is too large for the model, splitting data...
+Token count: 603297
+creating New Chunk
+creating New Chunk
+creating New Chunk
+creating New Chunk
+creating New Chunk
+Number of chunks created: 6
+Processing chunk 1 of 6...
+Calling OpenAI client...document_chunk1
+Token count: 119713
+Token limit reached. Waiting for reset...
+Processing visit data...
+Token count: 27882
+Calling OpenAI client...visit
+Token count: 27882
+Token limit reached. Waiting for reset...
+openaiClient preprocess Call allergy: 19.132s
+openaiClient preprocess Call surgery: 7.518s
+openaiClient preprocess Call patient: 20.994s
+openaiClient preprocess Call ptf: 13.042s
+openaiClient preprocess Call factor: 15.768s
+openaiClient preprocess Call med: 24.180s
+Token usage and request count reset.
+openaiClient preprocess Call problem: 33.014s
+openaiClient preprocess Call immunization: 23.772s
+openaiClient preprocess Call appointment: 46.303s
+openaiClient preprocess Call order: 57.205s
+openaiClient preprocess Call consult: 1:03.186 (m:ss.mmm)
+openaiClient preprocess Call vital: 1:09.222 (m:ss.mmm)
+openaiClient preprocess Call lab: 1:20.647 (m:ss.mmm)
+Token usage and request count reset.
+Processing chunk 2 of 6...
+Calling OpenAI client...document_chunk2
+Token count: 120450
+openaiClient preprocess Call visit: 1:48.473 (m:ss.mmm)
+Processing chunk 3 of 6...
+Calling OpenAI client...document_chunk3
+Token count: 120453
+Token usage and request count reset.
+Processing chunk 4 of 6...
+Calling OpenAI client...document_chunk4
+Token count: 120858
+Processing chunk 5 of 6...
+Calling OpenAI client...document_chunk5
+Token count: 120747
+Token usage and request count reset.
+Processing chunk 6 of 6...
+Calling OpenAI client...document_chunk6
+Token count: 1630
+JSON written to C:\Users\VACOEllioS1\apps\openai-node-orig\output\_LLMProcessed.json
+
+################################# Processed Patient Data with LLM: ############################
 Calling OpenAI client...
-As a primary care internist, I need a concise summary of a patient's progress notes from various visits. Please provide a 2-paragraph summary focusing only on pertinent updates that would be most relevant for me to know. At the beginning of the summary, mention the dates that the summary is summarizing in the format mm/yyyy to mm/yyyy. This includes notable changes in the patient's condition, any new diagnoses, updates on ongoing treatments, significant test results, and any modifications to medications or care plans. Exclude any repetitive information or minor details that are not essential for understanding the patient's primary health updates. After the summary, provide a bulleted list first of key medications the patient is on, then key diagnoses, then summarize vital signs trends, then any referrals/consultants they see (speciality and name of consultant), then provide a separate list of important lab results, then provide a separate list of key diagnostic test results. Here are the notes: "
-Client initialized successfully
-openaiClient Call: 24.473s
+Using prompt:
 
-Response from LLM:
-### Summary of Progress Notes (10/2023 to 04/2024)
+################################# Processed Patient with the below prompt: ############################
 
-Between October 2023 and April 2024, Mr. Sheba Harris presented for multiple follow-up appointments with notable clinical activities and updates. On 10/23/2023, a lung nodule was identified on an LDCT scan, measured at 5mm, and a follow-up LDCT was scheduled for 12 months. His medication regimen includes atorvastatin, metoprolol, and lisinopril which have been consistently refilled, and new medications such as tramadol for pain management were discussed. His existing conditions of hyperlipidemia, hypertension, and diabetes remain under management with continued medication adjustments based on lab results indicating controlled diabetes but elevated LDL cholesterol levels.
+Create a summary for **cardiovascular problems**”
 
-Significant diagnostic tests and procedures included ongoing lab tests like Lipid Profiles, Creatinine, Sodium, Chloride, and Glucose levels. On 1/19/2024, vital signs monitoring indicated elevated blood pressure readings (135/100 mmHg), high temperatures, and varying pulse rates, indicating the need for regular monitoring. He attended several cardiology and pulmonary consultations, with recommendations to continue current medications, manage diet and exercise for hypertension, and future follow-ups. Notable specialty consults scheduled included cardiology and audiology services.
+You may search for data that is typically relevant to the specified condition(s) (e.g., BNP for CHF, eGFR for CKD, troponin for ACS), but you must **only report data explicitly found** in the input files. **No inference or fabrication is permitted in any section.**
 
-### Key Medications:
-- Atorvastatin Calcium 80mg
-- Lisinopril 20mg
-- Metoprolol Succinate 100mg
-- Tramadol (for clinic administration)
-- Valproic Acid 250mg
-- Warfarin (Coumadin) 2.5mg
+Include this version tag at the top of your output:
+**Prompt Version: 25-06-16**
 
-### Key Diagnoses:
-- Type 2 Diabetes Mellitus
-- Hypertension
-- Hyperlipidemia
-- Coronary Artery Disease
-- Chronic Renal Insufficiency
-- Congestive Heart Failure
-- Chronic Atrial Fibrillation
+---
 
-### Vital Signs Trends:
-- Blood Pressure: Ranged from 120/80 to 135/100 mmHg
-- Pulse: Varied from 47 to 105 beats per minute
-- Temperature: Predominantly normal but occasional spikes up to 103.6°F
-- Weight: Recorded between 170 to 240 pounds, slight fluctuations
-- Pulse Oximetry: Generally stable, recorded mainly in the 90s percentage
+###  STRUCTURE AND OUTPUT FORMAT:
 
-### Referrals/Consultants:
-- Cardiology: Provider, One (various dates)
-- Pulmonary/Chest: Provider, Two
-- Audiology: Provider, Three
+---
 
-### Important Lab Results:
-- LDL Cholesterol: 132 mg/dL (Elevated)
-- Serum Creatinine: 1.1 to 1.5 mg/dL
-- Glucose: Fluctuated between 78 to 300 mg/dL
-- A1C: Stable at 8.2% indicating controlled diabetes
+### 1. **Problem Name**
 
-### Key Diagnostic Test Results:
-- LDCT on 10/23/2023: 5mm Lung Nodule, next scan in 12 months
-- EKG from recent visits: Showing right bundle branch block, no new significant changes
-- Echocardiogram results indicated an ejection fraction at around 25%, no significant coronary disease
-- X-ray: Knee MRI normal but noted minor degeneration consistent with age-related changes
+Report the exact diagnosis or problem name as it appears in the input.
+Example:
 
-This compilation of Mr. Harris's medical records provides a cohesive overview of his ongoing management and the necessary continuation of current therapeutic strategies. Regular consultations, diligent monitoring, and medication adherence are crucial for maintaining his health stability.
+* “Congestive Heart Failure” *(diagnosis.txt:3)*
+
+---
+
+### 2. **Onset and Course**
+
+Describe the timing and progression of the problem based on input data only.
+Example:
+
+* “First noted after ED visit in Jan 2023 for shortness of breath *(notes.txt:12)*.”
+
+---
+
+### 3. **Red Flag Findings**
+
+List acute or serious findings explicitly associated with the condition and potentially requiring urgent care.
+Examples include: abnormal vitals, decompensation, critical labs, major imaging findings.
+
+* If no such findings are present, state:
+  **“No red flag findings related to this condition were found in the input.”**
+* Cite all reported findings with (file:line) format.
+
+---
+
+### 4. **Relevant Labs and Tests**
+
+You may **search for labs or studies that are clinically relevant to the specified condition(s)**.
+Only report values explicitly present in the input.
+
+#### a. **Recurrent Labs Table:**
+
+| Date         | Test | Value     | Source      |
+| ------------ | ---- | --------- | ----------- |
+| Apr 01, 2025 | BNP  | 620 pg/mL | labs.txt:18 |
+| Feb 15, 2025 | BNP  | 510 pg/mL | labs.txt:12 |
+
+#### b. **One-Time Tests / Imaging:**
+
+List individual diagnostic studies (e.g., echo, CT, X-ray) with brief results and citations.
+Example:
+
+* Echocardiogram - Jan 10, 2025: LVEF 35% *(echo.txt:6)*
+
+---
+
+### 5. **Medication History**
+
+List medications associated with the specified condition. For each medication, include:
+
+* Name and dose
+* Start date (if available)
+* Stop date and reason (if available)
+* Current status
+* Source citation(s)
+
+**Format:**
+**[Name and Dose]-[Start Date]-[Stop Date and Reason]-[Current Status]-(Source)**
+
+**Example:**
+
+* **Furosemide 40 mg daily** - started Jan 2024 *(meds.txt:3)* - ongoing *(meds.txt:8)*
+* **Lisinopril 10 mg daily** - started Feb 2022 *(meds.txt:5)* - stopped Apr 2025 due to cough *(notes.txt:33)*
+
+---
+
+### 6. **Relevant Consults**
+
+List any specialty consults directly related to the condition, with:
+
+* Specialty
+* Date
+* Key recommendation or summary
+* Citation
+
+**Example:**
+
+* **Nephrology - Mar 15, 2025:** Recommended ACEI initiation *(consults.txt:9)*
+
+---
+
+### 7. **Criteria Assessment**
+
+Assess only criteria that are:
+
+* Explicitly requested by the user, or
+* Explicitly stated in the input files
+
+Do not infer or fabricate whether criteria should apply. Cite all supporting evidence.
+
+**Example:**
+
+* **Two BNP values ≥ 1 month apart:** Met - Feb 15, 2025 *(labs.txt:12)* and Apr 01, 2025 *(labs.txt:18)*
+
+If no criteria were requested or found:
+**“No assessment criteria were specified in the input.”**
+
+---
+
+### 8. **Missing or Absent Data**
+
+Only identify missing data elements if the **user prompt or input files request** that they be evaluated.
+
+Do **not infer or suggest** missing information unless it was part of the input query.
+
+**Example:**
+
+* “No eGFR values found, although renal monitoring was requested in prompt.”
+* “No cardiology consult found, as required by prompt criteria.”
+
+---
+
+### OUTPUT RULES:
+
+* Include at the top of the output:
+  **Prompt Version: 25-06-16**
+* Only include data **explicitly found** in the input
+* Do **not infer or fabricate** any content
+* Cite all data with (filename:line) or (filename:start–end or eventtime:type)
+* Use 'MMM DD, YYYY' date format
+* Use tables and bullets for clarity
+* Maintain concise, structured, and clinically accurate language
+
+
+
+Token count: 38961
+openaiClient Call: 11.890s
+
+################################# Response from LLM: ############################
+(Note Real output was redacted to show basic dramework of the output)
+Prompt Version: 25-06-16
+
+1. Problem Name
+“Coronary Artery Disease” (problem:Code1)
+“Right Bundle Branch Block” (problem:Code2)
+2. Onset and Course
+“Coronary Artery Disease” - First noted on Date1 (problem:date1)
+“Right Bundle Branch Block” - First noted on Date2 (problem:date2)
+3. Red Flag Findings
+“BP: 220/110” (document:DocumentRef1)
+“75% stenosis in the left carotid artery” (document:DocumentRef1)
+“BP elevated: 179/92” (document:DocumentRef2)
+“Low BP: 84/46” (document:DocumentRef3)
+4. Relevant Labs and Tests
+a. Recurrent Labs Table:
+
+| Date         | Test | Value     | Source      |
+| ------------ | ---- | --------- | ----------- |
+|date | LDL  | 110 mg/dL | DocumentRef1 |
+| date | HDL  | 64 mg/dL | DocumentRef1 |
+
+
+b. One-Time Tests / Imaging:
+Echocardiogram - Date4: Normal systolic function (document:DocumentRef4)
+Radiology - CT with contrast, Date5: No significant abnormalities in the pelvis (radiology:DocumentRef5)
+MRI - Date6: Moderate cervical spondylosis from C3 to C7 (radiology:DocumentRef6)
+5. Medication History
+Atorvastatin - ongoing (med: Cholesterol)
+Midodrine - ongoing (med: Blood Pressure)
+Metoprolol - discontinued (med: Blood Pressure)
+APIXABAN - discontinued (med: Blood Clot Prevention)
+6. Relevant Consults
+Cardiology - Date7: Routine consult for syncope and bifascicular block (consult: DocumentRef7)
+7. Criteria Assessment
+Two BNP values ≥ 1 month apart: No BNP values found in the input.
+8. Missing or Absent Data
+“No BNP values found, although monitoring might be relevant to coronary artery disease.”
+
+################################# Response from LLM <end>: ############################
+Total Time: 4:34.915 (m:ss.mmm)
+Token usage and request count reset.

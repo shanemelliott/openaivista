@@ -129,10 +129,11 @@ async function main() {
     //If the token size is too large, we will log a message and not call the LLM.
     if (tokens.length < 128000) {
       const client = initializeClient('gpt-4o'); //note: today, the apiversion has to bemanually changed in the openaiClient.js file if you change the model
-      // const llmResponse = await openaiClient(client, message);
+      const llmResponse = await openaiClient(client, message);
       console.timeEnd('openaiClient Call');
       console.log('\n################################# Response from LLM: ############################');
-      //console.log(llmResponse);
+      console.log(llmResponse);
+      console.log('\n################################# Response from LLM <end>: ############################');
       console.timeEnd('Total Time');
     } else {
       console.log('token size is too large for the model, please reduce the input size, please decrease to less than 128000 tokens');
