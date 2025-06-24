@@ -1,3 +1,7 @@
+const { encoding_for_model } = require("@dqbd/tiktoken");
+ const enc = encoding_for_model("gpt-4o"); // or your model
+
+
 /*
 
 Here we process the patient data and categorize it into different types.
@@ -42,19 +46,20 @@ async function processPatientData(items) {
             case 'visit':
               patientData.visit.push({
                 type,
+                dateTime: item.dateTime,
                 type: item.typeName,
                 class: item.patientClassName,
                 stay: item.stay,
                 service: item.service,
-                providers: item.providers
+                reasonName: item.reasonName,
+                categotyName: item.categoryName,
               });
               break;
             case 'allergy':
               patientData.allergy.push({
                 type,
-                substance: item.kind,
-                reaction: item.reaction,
-                observed: item.products
+                kind: item.kind,
+                summary:item.summary
               });
               break;
             case 'consult':
@@ -62,25 +67,32 @@ async function processPatientData(items) {
                 type,
                 dateTime: item.dateTime,
                 service: item.service,
-                reason: item.reason,
+                reason: item.reason.replace(/\s+/g, ' ').trim(),
                 status: item.statusName,
-                provisionalDx: item.provisionalDx
+                provisionalDxCode: item.provisionalDx?.code || '',
+                provisionalDxName: item.provisionalDx?.name || ''
               });
               break;
             case 'document':
-              patientData.document.push({
+              var obj={
                 type,
-                nationalTitle: item.nationalTitle,
+                Title: item.nationalTitle ? item.nationalTitle.title : item.localTitle,
+                role: item.nationalTitleRole? item.nationalTitleRole.role : '',
+                encounter: item.encounterName,
                 typeName: item.documentTypeName,
                 dateTime: item.referenceDateTime,
-                text: item.text
+                text: item.text[0].content.replace(/\s+/g, ' ').trim()
+              };
+              patientData.document.push({
+                ...obj,
+                tokenSize: enc.encode(JSON.stringify(obj)).length
               });
               break;
             case 'lab':
               patientData.lab.push({
                 type,
-                typeName: item.TypeName,
-                dateTime: item.observerd,
+                typeName: item.typeName,
+                dateTime: item.observed,
                 specimen: item.specimen,
                 result: item.result,
                 units: item.units,
@@ -90,11 +102,13 @@ async function processPatientData(items) {
             case 'med':
               patientData.med.push({
                 type,
-                typeName: item.TypeName,
+                name: item.name,
                 dateTime: item.observerd,
-                specimen: item.specimen,
-                result: item.result,
-                units: item.units,
+                overallStart: item.overallStart,
+                overallStop: item.overallStop,
+                medStatusName: item.medStatusName,
+                statusName: item.statusName,
+                content:item.content,
                 displayName: item.displayName,
               });
               break;
@@ -103,9 +117,10 @@ async function processPatientData(items) {
                 type,
                 name: item.fullName,
                 dob: item.dateOfBirth,
-                gender: item.genderName,
+                sex: item.genderName,
                 disability: item.disability,
-                veteran: item.veteran
+                veteran: item.veteran.isVet,
+                serviceConnected: item.veteran.serviceConnected
               });
               break;
             case 'vital':
