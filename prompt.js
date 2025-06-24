@@ -636,7 +636,106 @@ Do **not infer or suggest** missing information unless it was part of the input 
 * Maintain concise, structured, and clinically accurate language
 
 
-`
+`,
+`Create a summary for cardiovascular problems
+
+You may search for data that is typically relevant to the specified condition(s) (e.g., BNP for CHF, eGFR for CKD, troponin for ACS), but you must only report data explicitly found in the input files. No inference or fabrication is permitted in any section.
+
+Include this version tag at the top of your output: "Prompt Version: 25-06-16"
+
+OUTPUT FORMAT:
+Return the results in JSON format using the following structure:
+
+version: "Prompt Version: 25-06-16"
+ProblemName:
+name: Actual diagnosis or problem name
+source: (file:line)
+OnsetAndCourse:
+description: Timing and progression
+source: (file:line)
+RedFlagFindings:
+findings: List of findings
+sources: List of (file:line) for each finding
+RecurrentLabsTable:
+labs: List of labs with date, test, value, and source for each entry
+OneTimeTestsImaging:
+tests: List of individual diagnostic studies with brief results and source
+MedicationHistory:
+medications: List of medications with [name, dose, start date, stop date, reason, current status, source]
+RelevantConsults:
+consults: List of specialty consults with [specialty, date, key recommendation, source]
+CriteriaAssessment:
+criteria: List of criteria assessments with description and source
+MissingOrAbsentData:
+missingData: List of missing data elements with descriptions
+OUTPUT EXAMPLE:
+{
+  "version": "Prompt Version: 25-06-16",
+  "ProblemName": {
+    "name": "Acute Myocardial Infarction",
+    "source": "problem.txt:3"
+  },
+  "OnsetAndCourse": {
+    "description": "Diagnosed on May 23, 2000",
+    "source": "problem.txt:9"
+  },
+  "RedFlagFindings": {
+    "findings": [
+      "Pulse: 280/min",
+      "Pulse Oximetry: 80%",
+      "BP: 160/90 mm[Hg]",
+      "BP: 135/100 mm[Hg]",
+      "Pulse: 105/min"
+    ],
+    "sources": [
+      "vital.txt:42",
+      "vital.txt:43",
+      "vital.txt:36",
+      "vital.txt:24",
+      "vital.txt:25"
+    ]
+  },
+  "RecurrentLabsTable": {
+    "labs": [
+      {"date": "Feb 12, 2025", "test": "Troponin", "value": "Active", "source": "order.txt:68"},
+      {"date": "Apr 06, 2023", "test": "Troponin", "value": "N/A", "source": "order.txt:46"}
+    ]
+  },
+  "OneTimeTestsImaging": {
+    "tests": [
+      {"test": "Echocardiogram", "date": "Mar 25, 2004", "results": "Results not detailed", "source": "document.txt:27"}
+    ]
+  },
+  "MedicationHistory": {
+    "medications": [
+      {"name": "Rosuvastatin", "dose": "20mg daily", "startDate": "Mar 2025", "stopDate": null, "reason": null, "currentStatus": "ongoing", "source": ["meds.txt:5", "meds.txt:6"]},
+      {"name": "Carbamazepine", "dose": "200mg daily", "startDate": "Feb 2025", "stopDate": null, "reason": null, "currentStatus": "ongoing", "source": ["meds.txt:7", "meds.txt:8"]},
+      {"name": "Lisinopril", "dose": "10mg daily", "startDate": "Jan 2023", "stopDate": "Jan 2024", "reason": null, "currentStatus": "stopped", "source": ["meds.txt:10"]},
+      {"name": "Atorvastatin", "dose": "20mg daily", "startDate": "Jan 2023", "stopDate": "Jan 2024", "reason": null, "currentStatus": "stopped", "source": ["meds.txt:11"]},
+      {"name": "Metoprolol succinate", "dose": "50mg daily", "startDate": "Jan 2023", "stopDate": "Jan 2024", "reason": null, "currentStatus": "stopped", "source": ["meds.txt:12"]}
+    ]
+  },
+  "RelevantConsults": {
+    "consults": [
+      {"specialty": "Cardiology", "date": "Apr 19, 2025", "keyRecommendation": "Routine cardiac evaluation", "source": "consults.txt:37"},
+      {"specialty": "Cardiology", "date": "Jan 09, 2024", "keyRecommendation": "Chest pain evaluation", "source": "consults.txt:22"},
+      {"specialty": "Cardiology", "date": "Dec 06, 2023", "keyRecommendation": "Check-up", "source": "consults.txt:17"},
+      {"specialty": "Cardiology", "date": "Jul 20, 2023", "keyRecommendation": "Cardiac evaluation needed", "source": "consults.txt:27"}
+    ]
+  },
+  "CriteriaAssessment": {
+    "criteria": [
+      {"description": "Two Troponin orders ≥ 1 month apart", "source": ["order.txt:68", "order.txt:46"]}
+    ]
+  },
+  "MissingOrAbsentData": {
+    "missingData": ["No BNP or eGFR values found, although relevant for cardiology evaluations."]
+  }
+}
+RULES:
+Only include data explicitly found in the input
+Do not infer or fabricate any content
+Cite all data with (filename:line) or (filename:start–end or eventtime:type)`
 
 ]
 
