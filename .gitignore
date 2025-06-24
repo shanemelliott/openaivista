@@ -14,9 +14,15 @@ report.[0-9]*.[0-9]*.[0-9]*.[0-9]*.json
 config.js
 db.js
 .env
+stage.env
+prod.env
 *.jar
 #data
 *.csv
+# Test Files
+*work.js
+*test.js
+*spec.js
 
 # Runtime data
 pids
@@ -52,6 +58,9 @@ jspm_packages/
 
 # Data Dir
 output/
+testFiles/
+
+
 
 # Snowpack dependency directory (https://snowpack.dev/)
 web_modules/
@@ -91,6 +100,9 @@ web_modules/
 .env.production.local
 .env.local
 staging.env
+
+# Exclude python for now.
+*.py
 
 # parcel-bundler cache (https://parceljs.org/)
 .cache

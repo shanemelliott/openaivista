@@ -39,8 +39,8 @@ async function processPatientData(items) {
               patientData.problem.push({
                 type,
                 date: item.entered,
-                icdCode: item.icdCode,
-                description: item.summary
+                sctCode: item.problemText,
+                status: item.statusName
               });
               break;
             case 'visit':
@@ -100,18 +100,41 @@ async function processPatientData(items) {
               });
               break;
             case 'med':
+              if(item.dosages && item.dosages.length > 1) {
+                var doseInfoFirst = item.dosages[0].dose ? item.dosages[0].dose : '';
+                var doseInfoLast = item.dosages[item.dosages.length - 1].dose ? item.dosages[item.dosages.length - 1].dose : '';
+                var sigInfo = item.sig ? item.sig : '';
+                var medName = item.name;
+                if (doseInfoFirst) { medName += ' ' + doseInfoFirst; }
+                if (doseInfoLast && doseInfoLast !== doseInfoFirst) { medName += ' ... ' + doseInfoLast; }
+                if (sigInfo) { medName += ' ' + sigInfo; }
+              }else{
+              var doseInfo = item.dosages && item.dosages.length > 0 ? item.dosages[0].dose : '';
+              var sigInfo = item.sig ? item.sig : ''; 
+              var medName = item.name;
+              if (doseInfo) { medName += ' ' + doseInfo; }
+              if (sigInfo) { medName += ' ' + sigInfo; }
+            }
               patientData.med.push({
                 type,
-                name: item.name,
-                dateTime: item.observerd,
+                name: medName,
                 overallStart: item.overallStart,
                 overallStop: item.overallStop,
-                medStatusName: item.medStatusName,
-                statusName: item.statusName,
-                content:item.content,
-                displayName: item.displayName,
+                status: item.vaStatus
               });
               break;
+            case 'ptf': 
+              patientData.ptf.push({
+                type,
+                admissionDateTime: item.arrivalDateTime,
+                dischargeDateTime: item.dischargeDateTime,
+                icdCode: item.icdCode,
+                icdName: item.icdName,
+                specialty: item.specialtyName,
+                facility: item.facilityName
+               
+              });
+               break;
             case 'patient':
               patientData.patient.push({
                 type,

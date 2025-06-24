@@ -9,9 +9,10 @@ async function main() {
   try {
     // Define parameters for the RPC call
     const context = 'OR CPRS GUI CHART';
-    const stationNo = '500';
+    const stationNo = process.env.STN;
     const duz = process.env.DUZ;
     const rpc = 'ORWU DT';
+    
     const params = [
       {"string": "NOW"}
     ];

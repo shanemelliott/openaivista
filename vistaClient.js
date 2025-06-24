@@ -29,6 +29,7 @@ async function vistaClient(stationNo, duz, context, rpc, params) {
             {
                 "context": context,
                 "rpc": rpc,
+                "timeout": 60000,
                 "jsonResult": false,
                 "parameters": params
             },

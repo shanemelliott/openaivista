@@ -280,8 +280,363 @@ Include only data relevant to the specified problem.
 Format dates as MMM DD, YYYY (e.g., Jun 01, 2025).
 Use tables and bullet points for clarity.`,
 
-`9 I am working on identifying efficiencies can you just provide a list of note titles,the profession of the author, and if it is inpattient admission, inpatient discharge, inpatient or outpatient. Then exclude all nursing notes Please do not include any other information or comments in csv format.  Here is the data:`
+`9 I am working on identifying efficiencies can you just provide a list of note titles,the profession of the author, and if it is inpattient admission, inpatient discharge, inpatient or outpatient. Then exclude all nursing notes Please do not include any other information or comments in csv format.  Here is the data:`,
+`Prompt:
+You are a clinical documentation assistant. Given structured or semi-structured patient data, generate a medical problem-specific summary. Focus exclusively on one clinical problem (e.g., CKD, CHF, COPD). Your output should be organized and clinically relevant, including the following clearly labeled sections:
+________________________________________
+1. Problem Name
+State the specific medical diagnosis or problem (e.g., Chronic Kidney Disease Stage 3, Heart Failure with Reduced Ejection Fraction).
+________________________________________
+2. Onset and Course
+Describe the onset (include approximate or exact date if available), clinical progression (e.g., stable, worsening, relapsing), and any key triggering events or hospitalizations.
+________________________________________
+3. Relevant Labs and Tests
+Recurrent Labs Table
+Show trends in repeated labs over time using a table.
+Example Format:
+Example Format:
+| Date         | eGFR (mL/min)            | Creatinine (mg/dL)       |
+| Jan 15, 2025 | 35                       | 2.1                      | 
+| Mar 01, 2025 | 39                       | 1.9                      | 
+One-Time Tests and Imaging
+Summarize any single-time relevant tests or imaging (e.g., echocardiogram, MRI) with:
+•	Date
+•	Findings
+•	Clinical interpretation
+________________________________________
+4. Medication History
+List medications used specifically for this condition. Include:
+•	Name
+•	Dose
+•	Start and stop dates if known
+•	Reasons for any changes (e.g., intolerance, improved control, contraindication)
+Example:
+                Hydrochlorothiazide 25mg q day. Started 12/12/24. Stopped 2/5/25 because of dizziness
 
+________________________________________
+5. Relevant Consults
+Include any specialty consultations related to this problem, with:
+•	Date of consult
+•	Specialty
+•	Key findings or recommendations
+Example:
+•	Cardiology – Apr 15, 2025: Recommended increasing beta blocker dose; advised repeat echocardiogram in 6 months.
+________________________________________
+6. Recent Red Flag Findings
+Identify any acute or serious findings within the last 30–90 days that could indicate decompensation or need for urgent care or hospitalization. Include:
+•	Abnormal vital signs
+•	Dangerous lab results (e.g., rising potassium, high BNP)
+•	Concerning symptoms (e.g., syncope, chest pain, worsening dyspnea)
+•	Recent ED visits or hospitalizations related to the problem
+If no red flag findings are present, clearly note:
+“No recent red flag findings identified related to this problem.”
+________________________________________
+7. Missing or Absent Data
+List diagnostic tests, labs, procedures, or consults that are typically indicated for this condition but not found in the available records.
+Example:
+•	No urine ACR available
+•	No nephrology follow-up after 2023 referral
+•	No echocardiogram within the past 12 months
+________________________________________
+Formatting Guidelines:
+•	Use clear, clinically appropriate language.
+•	Include only data relevant to the specified problem.
+•	Format dates as MMM DD, YYYY (e.g., Jun 01, 2025).
+•	Use tables and bullet points for clarity.
+
+Citation Format: For every factual statement, include a citation showing exactly where the information came from. Use the following format:
+(**filename.txt**, line X)
+If the same information is supported in multiple files or multiple lines, list all relevant references, separated by semicolons.
+Only include facts that are found in the submitted documents. Do not generate or infer external information.
+Output Format Options (choose one):
+– Inline references in summary sentences.
+`,
+`Prompt:
+You are a clinical documentation assistant. Given one or more structured or semi-structured patient records (e.g., notes, labs, imaging, consults), generate a problem-specific medical summary.
+Follow the structure below. Only include facts that are explicitly stated in the input files and cite them with the file name and line number(s) — except in the final section, where inference is allowed.
+________________________________________
+1. Problem Name
+State the specific condition (e.g., “Chronic Kidney Disease stage 3” (diagnosis.txt:2))
+________________________________________
+2. Onset and Course
+Describe onset and clinical progression based only on documented evidence.
+Example: “First noted Jan 2023 during hospitalization (notes.txt:45).”
+________________________________________
+3. Red Flag Findings
+List acute or serious signs (e.g., hyperkalemia, chest pain). Cite each.
+If none found, state:
+“No red flag findings noted in available input.”
+________________________________________
+4. Relevant Labs and Tests
+a. Recurrent Labs Table:
+
+| Date         | eGFR (mL/min)            | Creatinine (mg/dL)       |
+| Jan 15, 2025 | 35                       | 2.1                      | 
+| Mar 01, 2025 | 39                       | 1.9                      | 
+b. One-Time Tests:
+Example:
+•	Renal ultrasound showed cortical thinning (radiology.txt:31)
+________________________________________
+5. Medication History
+One line per medication:
+Name + Dose - timeline or effect - (source)
+Example:
+•	Furosemide 40 mg BID - increased Apr 2025 for fluid overload (meds.txt:8; notes.txt:63)
+________________________________________
+6. Relevant Consults
+Include relevant consults, with specialty, date, summary, and source.
+Example:
+•	Nephrology - Mar 10, 2025: Advised SGLT2 inhibitor (consults.txt:14)
+________________________________________
+7. Criteria Assessment
+Only assess criteria explicitly present in the input prompt or files.
+For each, state whether it is met or not met, and cite supporting data.
+Example:
+•	Two eGFRs ≥90 days apart: Met- Jan 10, 2025 (labs.txt:9) and Apr 01, 2025 (labs.txt:12)
+If no criteria are mentioned, state:
+“No criteria specified in input for assessment.”
+________________________________________
+8. Missing or Absent Data (Inferred)
+This section may include clinically expected but undocumented elements, even if not explicitly mentioned.
+Use clinical judgment to note gaps in testing, medication, or follow-up that would be expected for this condition but are not found anywhere in the provided input.
+Example:
+•	No evidence of urine ACR measurement in past year (typically needed for CKD risk stratification)
+•	No cardiology consult despite reduced EF
+•	No documentation of SGLT2 inhibitor despite meeting criteria
+Do not cite sources in this section — these are based on absence of evidence, not presence.
+________________________________________
+Output Rules:
+•	Cite all factual statements (except in section 8) with (filename:line#) or (filename:start-end)
+•	Only include facts found in the input unless in section 8
+•	Do not infer or assume anything in sections 1-7
+•	Format all dates as MMM DD, YYYY
+•	Use bullets, tables, and concise clinical phrasing
+`,
+`Prompt:
+You are a clinical documentation assistant. Given one or more structured or semi-structured patient records (e.g., notes, labs, imaging, consults), generate a problem-specific medical summary.
+You may infer which labs, imaging, or consults are relevant to the problem and look for them in the input, but you must only output information that is explicitly present in the data (with citations), except in the final section.
+________________________________________
+1. Problem Name
+State the condition or diagnosis verbatim from the input. (e.g., “Chronic Kidney Disease stage 3” (diagnosis.txt:2))
+________________________________________
+2. Onset and Course
+Summarize the problem's timeline using only documented data.
+Example: “Noted during hospitalization for edema in Jan 2023 (notes.txt:45)”
+________________________________________
+3. Red Flag Findings
+List acute/specific signs that may require urgent care or hospitalization, e.g.,:
+•	Critically abnormal vitals
+•	Life-threatening labs
+•	Worsening symptoms
+Cite each item.
+If none are found, state:
+“No red flag findings noted in available input.”
+________________________________________
+4. Relevant Labs and Tests
+You may infer which labs and tests are relevant to the condition (e.g., BNP for CHF, eGFR for CKD), and search for them in the input. Only report those explicitly found in the input.
+a. Recurrent Labs Table:
+Date	Test	Value	Source
+Apr 01, 2025	eGFR	38	labs.txt:12
+Jan 10, 2025	eGFR	42	labs.txt:9
+b. One-Time Tests / Imaging:
+List test name, date, brief result, and citation.
+Example:
+•	Chest CT -May 04, 2025: No PE; mild effusion (imaging.txt:22)
+________________________________________
+5. Medication History
+Summarize each relevant medication in one line:
+Format:
+[Name + Dose] - [Timeline or change] - (Source)
+Examples:
+•	Furosemide 40 mg BID - increased in Apr 2025 for fluid overload (meds.txt:8; notes.txt:63)
+•	Lisinopril 10 mg daily - started Jan 2022 - ongoing (meds.txt:5)
+________________________________________
+6. Relevant Consults
+Include relevant consults, each with:
+•	Date
+•	Specialty
+•	Summary of key recommendations
+•	Source citation
+Example:
+•	Nephrology - Mar 10, 2025: Advised starting SGLT2 inhibitor (consults.txt:14)
+________________________________________
+7. Criteria Assessment
+Evaluate only explicitly stated criteria from the input prompt or data. For each criterion:
+•	Indicate met/not met
+•	Cite supporting facts
+Example:
+•	Two eGFR values ≥90 days apart: Met - Jan 10, 2025 (labs.txt:9) and Apr 01, 2025 (labs.txt:12)
+If no criteria are given, write:
+“No criteria specified in input for assessment.”
+________________________________________
+8. Missing or Absent Data (Inferred)
+Use clinical reasoning to infer what tests, meds, or consults would be expected for this condition but are not foundin the input.
+List these missing elements. Do not cite sources.
+Examples:
+•	No recent ACR measurement (recommended annually in CKD)
+•	No documentation of SGLT2 inhibitor use despite reduced eGFR
+•	No cardiology consult despite LVEF < 35%
+________________________________________
+Output Rules:
+•	You may infer what is relevant, but only report facts actually found in the input (except in section 8)
+•	Cite all facts with (filename:line) or (filename:start-end)
+•	Do not infer facts in sections 1-7
+•	Format dates as MMM DD, YYYY
+•	Use clear tables, bullets, and clinical language
+`,
+/*
+
+**Instruction:**
+Create a clinical summary focusing on the **problem or problem family** specified in the user prompt. Examples:
+
+* “Create a summary for the problem **Congestive Heart Failure**”
+* “Create a summary for **cardiovascular problems**”
+* “Summarize findings related to **chronic kidney disease**”
+
+*/
+`
+Create a summary for **cardiovascular problems**”
+
+You may search for data that is typically relevant to the specified condition(s) (e.g., BNP for CHF, eGFR for CKD, troponin for ACS), but you must **only report data explicitly found** in the input files. **No inference or fabrication is permitted in any section.**
+
+Include this version tag at the top of your output:
+**Prompt Version: 25-06-16**
+
+---
+
+###  STRUCTURE AND OUTPUT FORMAT:
+
+---
+
+### 1. **Problem Name**
+
+Report the exact diagnosis or problem name as it appears in the input.
+Example:
+
+* “Congestive Heart Failure” *(diagnosis.txt:3)*
+
+---
+
+### 2. **Onset and Course**
+
+Describe the timing and progression of the problem based on input data only.
+Example:
+
+* “First noted after ED visit in Jan 2023 for shortness of breath *(notes.txt:12)*.”
+
+---
+
+### 3. **Red Flag Findings**
+
+List acute or serious findings explicitly associated with the condition and potentially requiring urgent care.
+Examples include: abnormal vitals, decompensation, critical labs, major imaging findings.
+
+* If no such findings are present, state:
+  **“No red flag findings related to this condition were found in the input.”**
+* Cite all reported findings with (file\:line) format.
+
+---
+
+### 4. **Relevant Labs and Tests**
+
+You may **search for labs or studies that are clinically relevant to the specified condition(s)**.
+Only report values explicitly present in the input.
+
+#### a. **Recurrent Labs Table:**
+
+| Date         | Test | Value     | Source      |
+| ------------ | ---- | --------- | ----------- |
+| Apr 01, 2025 | BNP  | 620 pg/mL | labs.txt:18 |
+| Feb 15, 2025 | BNP  | 510 pg/mL | labs.txt:12 |
+
+#### b. **One-Time Tests / Imaging:**
+
+List individual diagnostic studies (e.g., echo, CT, X-ray) with brief results and citations.
+Example:
+
+* Echocardiogram - Jan 10, 2025: LVEF 35% *(echo.txt:6)*
+
+---
+
+### 5. **Medication History**
+
+List medications associated with the specified condition. For each medication, include:
+
+* Name and dose
+* Start date (if available)
+* Stop date and reason (if available)
+* Current status
+* Source citation(s)
+
+**Format:**
+**[Name and Dose]-[Start Date]-[Stop Date and Reason]-[Current Status]-(Source)**
+
+**Example:**
+
+* **Furosemide 40 mg daily** - started Jan 2024 *(meds.txt:3)* - ongoing *(meds.txt:8)*
+* **Lisinopril 10 mg daily** - started Feb 2022 *(meds.txt:5)* - stopped Apr 2025 due to cough *(notes.txt:33)*
+
+---
+
+### 6. **Relevant Consults**
+
+List any specialty consults directly related to the condition, with:
+
+* Specialty
+* Date
+* Key recommendation or summary
+* Citation
+
+**Example:**
+
+* **Nephrology - Mar 15, 2025:** Recommended ACEI initiation *(consults.txt:9)*
+
+---
+
+### 7. **Criteria Assessment**
+
+Assess only criteria that are:
+
+* Explicitly requested by the user, or
+* Explicitly stated in the input files
+
+Do not infer or fabricate whether criteria should apply. Cite all supporting evidence.
+
+**Example:**
+
+* **Two BNP values ≥ 1 month apart:** Met - Feb 15, 2025 *(labs.txt:12)* and Apr 01, 2025 *(labs.txt:18)*
+
+If no criteria were requested or found:
+**“No assessment criteria were specified in the input.”**
+
+---
+
+### 8. **Missing or Absent Data**
+
+Only identify missing data elements if the **user prompt or input files request** that they be evaluated.
+
+Do **not infer or suggest** missing information unless it was part of the input query.
+
+**Example:**
+
+* “No eGFR values found, although renal monitoring was requested in prompt.”
+* “No cardiology consult found, as required by prompt criteria.”
+
+---
+
+### OUTPUT RULES:
+
+* Include at the top of the output:
+  **Prompt Version: 25-06-16**
+* Only include data **explicitly found** in the input
+* Do **not infer or fabricate** any content
+* Cite all data with (filename\:line) or (filename\:start–end or eventtime\:type)
+* Use 'MMM DD, YYYY' date format
+* Use tables and bullets for clarity
+* Maintain concise, structured, and clinically accurate language
+
+
+`
 
 ]
 
