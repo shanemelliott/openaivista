@@ -34,7 +34,7 @@ async function callOpenAI(type, data) {
             Preprocess the following ${type} section of the medical record data:
             - Remove duplicate entries.
             - Categorize each entry into the appropriate sub-category.
-            - Format the data for integration with the medical record.
+            - Format the data for integration with the medical record in csv format with headers.
             - Ensure data is concise and relevant to the ${type} section.
             - Summarize key points for notes, remove irrelevant or repetitive information.
 
@@ -81,7 +81,7 @@ async function preprocessType(type, data) {
             Preprocess the following ${type} section of the medical record data:
             - Remove duplicate entries.
             - Categorize each entry into the appropriate sub-category.
-            - Format the data for integration with the medical record.
+            - Format the data for integration with the medical record in csv format with headers.
             - Ensure data is concise and relevant to the ${type} section.
             - Summarize key points for notes, remove irrelevant or repetitive information.
 
@@ -152,7 +152,56 @@ async function preprocessType(type, data) {
 
 }
 
+async function convertPatientDataToPipeDelimited(patientData) {
+  // Define header mappings (customize each type as needed)
+  const headerMapping = {
+    vital: ["dateTime", "name", "value", "units"],
+    lab: ["typeName", "dateTime", "specimen", "result", "units", "displayName"],
+    document: ["Title", "role", "encounter", "typeName", "dateTime", "text"],
+    consult: ["dateTime", "service", "reason", "status", "provisionalDxCode", "provisionalDxName"],
+    // Add other types as needed...
+  };
 
+  const pipeDelimitedOutput = {}; // Will hold the resulting strings for each type
+
+  Object.entries(patientData).forEach(([type, items]) => {
+    if (!items.length) return;
+
+     // For 'document' type, skip conversion and add as is.
+    if (type === "document") {
+      console.log(`Skipping conversion for type: ${type}, adding raw JSON.`);
+      pipeDelimitedOutput[type] = items;
+      return;
+    }
+
+    // Use custom headers if defined; otherwise default to all keys (excluding the 'type' property)
+    let headers = headerMapping[type];
+    if (!headers) {
+      headers = Object.keys(items[0]).filter(key => key !== 'type');
+    }
+
+    // Build the header line
+    const lines = [];
+    lines.push(headers.join("|"));
+
+    // Build each data row using the header mapping. For custom mappings, you can perform extra lookups.
+    items.forEach(item => {
+      const row = headers.map(header => {
+        // For the "vital" type, map "name" header to "typeName" in the item.
+        if (type === "vital" && header === "name") {
+          return item.typeName || "";
+        } 
+        return item[header] !== undefined ? item[header] : "";
+      });
+      lines.push(row.join("|"));
+    });
+
+    // Combine rows into one string for this type.
+    pipeDelimitedOutput[type] = lines.join("\n");
+  });
+
+  return pipeDelimitedOutput;
+}
 
 async function preprocess(data) {
 
@@ -160,8 +209,7 @@ async function preprocess(data) {
         const types = Object.keys(data).filter(type => data[type].length > 0);
         const results = await Promise.all(
             types.map(type => {
-                console.log(`Processing ${type} data...`);
-                return preprocessType(type, data[type]).then(result => [type, result]);
+              return preprocessType(type, data[type]).then(result => [type, result]);
             })
         );
         // Convert array of [type, result] to an object

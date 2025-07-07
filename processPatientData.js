@@ -55,6 +55,28 @@ async function processPatientData(items) {
                 categotyName: item.categoryName,
               });
               break;
+            case 'image':
+              let diagnosisField = '';  
+             if(item.diagnosis && item.diagnosis.length > 1) {
+             let primaryDiagnosis = '';
+             let otherDiagnoses = [];
+             item.diagnosis.forEach((code) => {
+               if (code.primary===true) {
+                 primaryDiagnosis = code.code;
+               } else {
+                 otherDiagnoses.push(code.code );
+               }
+             });
+             diagnosisField = `Primary diagnosis: ${primaryDiagnosis || 'N/A'}, Other diagnoses: ${otherDiagnoses.join(', ') || 'None'}`;
+             } else {
+                diagnosisField = item.diagnosis && item.diagnosis.length === 1 ? `Primary diagnosis: ${item.diagnosis[0]}` : 'No diagnosis codes available';
+              }
+             patientData.image.push({
+               type,
+               encounter: item.encounterName,
+               diagnosis: diagnosisField,
+             });
+             break;
             case 'allergy':
               patientData.allergy.push({
                 type,
@@ -203,7 +225,12 @@ async function processPatientData(items) {
     }
   });
 
+  
   return patientData;
 }
+
+
+
+
 
 module.exports = { processPatientData };
