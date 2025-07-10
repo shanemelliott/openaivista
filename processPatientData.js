@@ -20,13 +20,33 @@ not done:
 
 const types = [
   'patient', 'problem', 'allergy', 'consult', 'vital', 'lab', 'order', 'treatment',
-  'med', 'ptf', 'factor', 'immunization', 'cpt', 'education', 'pov', 'image',
-  'appointment', 'surgery', 'document', 'visit'
+  'med', 'ptf', 'immunization', 'cpt', 'education', 'pov', 'image', 
+  'document', 'visit'
 ];
+
+
+const fm2UTC = (fileManDateTime: number): string => {
+  if (!fileManDateTime) return '';
+
+  const parts = fileManDateTime.toString().split('.');
+  const baseDate = parseInt(parts[0]) + 17000000; // Adjust from FileMan epoch (year 1700)
+  const timeStr = parts[1]?.padEnd(6, '0') ?? '000000';
+
+  const year = baseDate.toString().slice(0, 4);
+  const month = baseDate.toString().slice(4, 6);
+  const day = baseDate.toString().slice(6, 8);
+  const hours = timeStr.slice(0, 2);
+  const minutes = timeStr.slice(2, 4);
+
+  return `${year}-${month}-${day} ${hours}:${minutes}`;
+}
+
 
 async function processPatientData(items) {
   const patientData = {};
   types.forEach(type => { patientData[type] = []; });
+
+  const immunizationRaw: any[] = [];
 
   items.forEach(item => {
     if (item.uid) {
@@ -105,10 +125,14 @@ async function processPatientData(items) {
                 dateTime: item.referenceDateTime,
                 text: item.text[0].content.replace(/\s+/g, ' ').trim()
               };
-              patientData.document.push({
-                ...obj,
-                tokenSize: enc.encode(JSON.stringify(obj)).length
-              });
+              const roleHasNurse = obj.role && obj.role.toUpperCase().includes('NURS');
+              const titleHasNurse = obj.Title && obj.Title.toUpperCase().includes('NURS');
+              if (!roleHasNurse && !titleHasNurse) {
+                patientData.document.push({
+                  ...obj,
+                  tokenSize: enc.encode(JSON.stringify(obj)).length
+                });
+              }
               break;
             case 'lab':
               patientData.lab.push({
@@ -178,43 +202,21 @@ async function processPatientData(items) {
               });
               break;
             case 'order':
-              patientData.order.push({
-                type,
-                dateTime: item.entered,
-                name: item.content,
-                status: item.statusName
-              });
-              break;
-            case 'factor':
-              patientData.factor.push({
-                type,
-                dateTime: item.entered,
-                name: item.name,
-                category: item.categoryName
-              });
+              if (item.statusName === "PENDING") {
+                patientData.order.push({
+                  type,
+                  dateTime: item.entered,
+                  name: item.content,
+                  status: item.statusName
+                });
+              }
               break;
             case 'immunization':
-              patientData.immunization.push({
+              immunizationRaw.push({
+                ...item,
                 type,
                 dateTime: item.administeredDateTime,
                 name: item.name
-              });
-              break;
-            case 'surgery':
-              patientData.surgery.push({
-                type,
-                dateTime: item.dateTime,
-                typeName: item.TypeName,
-                kind: item.kind
-              });
-              break;
-            case 'appointment':
-              patientData.appointment.push({
-                type,
-                dateTime: item.dateTime,
-                typeName: item.categoryName,
-                status: item.appointmentStatus,
-                careType: item.stopCodeName
               });
               break;
             default:
@@ -225,7 +227,26 @@ async function processPatientData(items) {
     }
   });
 
-  
+  // Group immunizations by name and keep only the most recent record for each
+  if (immunizationRaw.length > 0) {
+    const grouped: Record<string, any[]> = {};
+    immunizationRaw.forEach((rec) => {
+      if (!grouped[rec.name]) grouped[rec.name] = [];
+      grouped[rec.name].push(rec);
+    });
+    const mostRecent: any[] = [];
+    Object.values(grouped).forEach((records) => {
+      // Sort descending by administeredDateTime
+      records.sort((a, b) => b.administeredDateTime - a.administeredDateTime);
+      const latest = records[0];
+      mostRecent.push({
+        ...latest,
+        dateTime: fm2UTC(latest.administeredDateTime),
+      });
+    });
+    patientData.immunization = mostRecent;
+  }
+
   return patientData;
 }
 
