@@ -25,7 +25,7 @@ const types = [
 ];
 
 
-const fm2UTC = (fileManDateTime: number): string => {
+const fm2UTC = (fileManDateTime) => {
   if (!fileManDateTime) return '';
 
   const parts = fileManDateTime.toString().split('.');
@@ -46,7 +46,7 @@ async function processPatientData(items) {
   const patientData = {};
   types.forEach(type => { patientData[type] = []; });
 
-  const immunizationRaw: any[] = [];
+  const immunizationRaw = [];
 
   items.forEach(item => {
     if (item.uid) {
@@ -132,6 +132,8 @@ async function processPatientData(items) {
                   ...obj,
                   tokenSize: enc.encode(JSON.stringify(obj)).length
                 });
+              }else{
+                console.log('skipping document with nurse role or title',obj.role, obj.Title);
               }
               break;
             case 'lab':
@@ -229,12 +231,12 @@ async function processPatientData(items) {
 
   // Group immunizations by name and keep only the most recent record for each
   if (immunizationRaw.length > 0) {
-    const grouped: Record<string, any[]> = {};
+    const grouped = {};
     immunizationRaw.forEach((rec) => {
       if (!grouped[rec.name]) grouped[rec.name] = [];
       grouped[rec.name].push(rec);
     });
-    const mostRecent: any[] = [];
+    const mostRecent = [];
     Object.values(grouped).forEach((records) => {
       // Sort descending by administeredDateTime
       records.sort((a, b) => b.administeredDateTime - a.administeredDateTime);
